@@ -30,7 +30,8 @@ export async function GET(req: NextRequest) {
       page,
       limit
     });
-  } catch (error) {
+  } catch (error: any) {
+    console.error('API Error:', error.message || error);
     return NextResponse.json({ error: 'Failed to fetch customers' }, { status: 500 });
   }
 }
