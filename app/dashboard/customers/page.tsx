@@ -135,7 +135,7 @@ export default function CustomersPage() {
         <div className="overflow-x-auto">
           <table className="w-full border-collapse">
             <thead>
-              <tr className="bg-[rgba(255,255,255,0.02)] text-left text-xs font-bold text-[var(--text-muted)] uppercase tracking-wider">
+              <tr className="bg-[var(--bg-primary)] text-left text-xs font-bold text-[var(--text-muted)] uppercase tracking-wider">
                 <th className="px-6 py-4 border-b border-[var(--border-color)]">ID</th>
                 <th className="px-6 py-4 border-b border-[var(--border-color)]">Customer Name</th>
                 <th className="px-6 py-4 border-b border-[var(--border-color)]">Contact Info</th>
@@ -235,9 +235,9 @@ export default function CustomersPage() {
 
       {/* COMPACT MODAL */}
       {showModal && (
-        <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4">
+        <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm flex items-center justify-center z-50 p-4">
           <div className="bg-[var(--bg-card)] border border-[var(--border-color)] rounded-2xl w-full max-w-md shadow-2xl animate-modal-in overflow-hidden">
-            <div className="flex items-center justify-between p-5 border-b border-[var(--border-color)] bg-[rgba(255,255,255,0.01)]">
+            <div className="flex items-center justify-between p-5 border-b border-[var(--border-color)] bg-[var(--bg-primary)]">
               <h2 className="text-lg font-bold text-[var(--text-primary)]">
                 {editingCustomer ? 'Edit Profile' : 'New Customer'}
               </h2>

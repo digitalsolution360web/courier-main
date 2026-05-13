@@ -103,7 +103,7 @@ export default function CourierHistory() {
       case 'Cancelled': return 'text-[var(--accent-rose)] bg-[rgba(244,63,94,0.1)] border-[rgba(244,63,94,0.2)]';
       case 'In Transit': return 'text-[var(--accent-sky)] bg-[rgba(14,165,233,0.1)] border-[rgba(14,165,233,0.2)]';
       case 'Booked': return 'text-[var(--accent-amber)] bg-[rgba(245,158,11,0.1)] border-[rgba(245,158,11,0.2)]';
-      default: return 'text-[var(--text-secondary)] bg-[rgba(255,255,255,0.05)] border-[rgba(255,255,255,0.1)]';
+      default: return 'text-[var(--text-secondary)] bg-[var(--bg-secondary)] border-[var(--border-color)]';
     }
   };
 
@@ -271,7 +271,7 @@ export default function CourierHistory() {
         </h2>
         
         {history.length === 0 ? (
-          <div className="text-center py-16 bg-[rgba(255,255,255,0.01)] rounded-2xl border-2 border-dashed border-[var(--border-color)]">
+          <div className="text-center py-16 bg-[var(--bg-primary)] rounded-2xl border-2 border-dashed border-[var(--border-color)]">
             <p className="text-[var(--text-muted)] font-medium">No movement history logged for this shipment.</p>
           </div>
         ) : (
@@ -284,7 +284,7 @@ export default function CourierHistory() {
                 {/* Milestone Dot */}
                 <div className={`absolute -left-10 top-1.5 w-6 h-6 rounded-full border-4 border-[var(--bg-card)] z-10 transition-transform group-hover:scale-125 ${index === 0 ? 'bg-[var(--accent-primary)] shadow-[0_0_12px_var(--accent-primary)]' : 'bg-[var(--border-color)]'}`}></div>
                 
-                <div className={`rounded-2xl p-6 transition-all border border-[var(--border-color)] ${index === 0 ? 'bg-[rgba(99,102,241,0.05)] border-[rgba(99,102,241,0.2)] shadow-lg' : 'bg-[rgba(255,255,255,0.01)] hover:bg-[rgba(255,255,255,0.02)] hover:border-[var(--text-muted)]'}`}>
+                <div className={`rounded-2xl p-6 transition-all border border-[var(--border-color)] ${index === 0 ? 'bg-[rgba(79,70,229,0.05)] border-[rgba(79,70,229,0.15)] shadow-sm' : 'bg-[var(--bg-primary)] hover:bg-[var(--bg-card-hover)]'}`}>
                   <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-2 mb-4">
                     <span className={`status-badge border font-bold ${getStatusStyle(item.status)}`}>
                       {item.status}

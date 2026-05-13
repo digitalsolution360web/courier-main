@@ -109,9 +109,9 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 padding: '10px 12px', borderRadius: '8px', marginBottom: '2px',
                 textDecoration: 'none', fontSize: '14px',
                 fontWeight: isActive ? '600' : '400',
-                color: isActive ? '#6366f1' : 'var(--text-secondary)',
-                background: isActive ? 'rgba(99,102,241,0.1)' : 'transparent',
-                borderLeft: isActive ? '2px solid #6366f1' : '2px solid transparent',
+                color: isActive ? 'var(--accent-primary)' : 'var(--text-secondary)',
+                background: isActive ? 'rgba(79, 70, 229, 0.08)' : 'transparent',
+                borderLeft: isActive ? '2px solid var(--accent-primary)' : '2px solid transparent',
                 transition: 'all 0.15s ease',
               }}>
                 <span style={{ opacity: isActive ? 1 : 0.7 }}>{item.icon}</span>
@@ -126,7 +126,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           <div style={{
             display: 'flex', alignItems: 'center', gap: '10px',
             padding: '10px 12px', borderRadius: '8px',
-            background: 'rgba(255,255,255,0.03)', marginBottom: '8px',
+            background: 'var(--bg-primary)', marginBottom: '8px',
           }}>
             <div style={{
               width: '32px', height: '32px',
@@ -146,8 +146,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             style={{
               width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center',
               gap: '8px', padding: '9px 12px', borderRadius: '8px',
-              border: '1px solid rgba(244,63,94,0.25)', background: 'rgba(244,63,94,0.06)',
-              color: '#f87171', fontSize: '13px', fontWeight: '500',
+              border: '1px solid rgba(239,68,68,0.2)', background: 'rgba(239,68,68,0.04)',
+              color: 'var(--accent-rose)', fontSize: '13px', fontWeight: '500',
               cursor: loggingOut ? 'not-allowed' : 'pointer',
               opacity: loggingOut ? 0.6 : 1, transition: 'all 0.15s ease',
             }}

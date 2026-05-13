@@ -26,7 +26,7 @@ const STATUS_CONFIG: Record<string, { bg: string; color: string; dot: string; bo
 };
 
 function StatusBadge({ status }: { status: string }) {
-  const cfg = STATUS_CONFIG[status] || { bg: 'rgba(255,255,255,0.06)', color: '#8b949e', dot: '#8b949e', border: 'rgba(255,255,255,0.1)' };
+  const cfg = STATUS_CONFIG[status] || { bg: 'rgba(0,0,0,0.04)', color: 'var(--text-secondary)', dot: 'var(--text-muted)', border: 'var(--border-color)' };
   return (
     <span style={{
       display: 'inline-flex', alignItems: 'center', gap: '6px',
@@ -171,11 +171,11 @@ export default function CouriersPage() {
       </div>
 
       {/* Table */}
-      <div style={{ background: 'var(--bg-card)', border: '1px solid var(--border-color)', borderRadius: '16px', overflow: 'hidden', boxShadow: '0 4px 20px rgba(0,0,0,0.2)' }}>
+      <div style={{ background: 'var(--bg-card)', border: '1px solid var(--border-color)', borderRadius: '16px', overflow: 'hidden', boxShadow: 'var(--shadow-card)' }}>
         <div style={{ overflowX: 'auto' }}>
           <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: '900px' }}>
             <thead>
-              <tr style={{ background: 'rgba(255,255,255,0.01)', borderBottom: '1px solid var(--border-color)' }}>
+              <tr style={{ background: 'var(--bg-primary)', borderBottom: '1px solid var(--border-color)' }}>
                 {['Tracking', 'Route Detail', 'Parties', 'Specs', 'Status', 'Actions'].map(h => (
                   <th key={h} style={{ padding: '14px 20px', textAlign: 'left', fontSize: '11px', fontWeight: '800', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>{h}</th>
                 ))}
@@ -233,8 +233,9 @@ export default function CouriersPage() {
         <div 
           onClick={closeModal} 
           style={{ 
-            position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.85)', 
-            display: 'flex', alignItems: 'center', justifyContent: 'center', 
+            position: 'fixed', inset: 0, background: 'rgba(15,23,42,0.4)', 
+            backdropFilter: 'blur(4px)',
+            display: 'flex', alignItems: 'center', justifyCenter: 'center', 
             zIndex: 1000, padding: '16px'
           }}
         >
@@ -244,7 +245,7 @@ export default function CouriersPage() {
             style={{ 
               background: 'var(--bg-card)', border: '1px solid var(--border-color)', 
               borderRadius: '20px', width: '100%', maxWidth: '520px', 
-              boxShadow: '0 20px 50px rgba(0,0,0,0.6)', overflow: 'hidden' 
+              boxShadow: '0 20px 40px rgba(0,0,0,0.1)', overflow: 'hidden' 
             }}
           >
             <div style={{ padding: '18px 24px', borderBottom: '1px solid var(--border-color)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -262,7 +263,7 @@ export default function CouriersPage() {
                 <div style={{ gridColumn: '1 / -1' }}>
                   <label style={{ display: 'block', fontSize: '11px', fontWeight: '700', color: 'var(--text-muted)', textTransform: 'uppercase', marginBottom: '6px' }}>Tracking Number</label>
                   <input type="text" required value={formData.tracking_number} onChange={e => setFormData(f => ({ ...f, tracking_number: e.target.value }))}
-                    style={{ width: '100%', boxSizing: 'border-box', background: 'rgba(0,0,0,0.2)', border: '1px solid var(--border-color)', borderRadius: '10px', padding: '10px 14px', color: 'var(--accent-primary)', fontSize: '14px', fontFamily: 'monospace', fontWeight: '700', outline: 'none' }}
+                    style={{ width: '100%', boxSizing: 'border-box', background: 'var(--bg-primary)', border: '1px solid var(--border-color)', borderRadius: '10px', padding: '10px 14px', color: 'var(--accent-primary)', fontSize: '14px', fontFamily: 'monospace', fontWeight: '700', outline: 'none' }}
                   />
                 </div>
 
@@ -308,7 +309,7 @@ export default function CouriersPage() {
                 <div>
                   <label style={{ display: 'block', fontSize: '11px', fontWeight: '700', color: 'var(--text-muted)', textTransform: 'uppercase', marginBottom: '6px' }}>Delivery Date</label>
                   <input type="date" required value={formData.expected_delivery} onChange={e => setFormData(f => ({ ...f, expected_delivery: e.target.value }))}
-                    style={{ width: '100%', boxSizing: 'border-box', background: 'var(--bg-secondary)', border: '1px solid var(--border-color)', borderRadius: '10px', padding: '10px', color: 'var(--text-primary)', fontSize: '13px', outline: 'none', colorScheme: 'dark' }}
+                    style={{ width: '100%', boxSizing: 'border-box', background: 'var(--bg-secondary)', border: '1px solid var(--border-color)', borderRadius: '10px', padding: '10px', color: 'var(--text-primary)', fontSize: '13px', outline: 'none', colorScheme: 'light' }}
                   />
                 </div>
 
