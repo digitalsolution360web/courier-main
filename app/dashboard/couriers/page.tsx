@@ -235,7 +235,7 @@ export default function CouriersPage() {
           style={{ 
             position: 'fixed', inset: 0, background: 'rgba(15,23,42,0.4)', 
             backdropFilter: 'blur(4px)',
-            display: 'flex', alignItems: 'center', justifyCenter: 'center', 
+            display: 'flex', alignItems: 'center', justifyContent: 'center', 
             zIndex: 1000, padding: '16px'
           }}
         >
