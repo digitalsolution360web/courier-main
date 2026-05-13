@@ -121,23 +121,18 @@ export default function CouriersPage() {
   };
 
   return (
-    <div className="animate-fade-in" style={{ paddingBottom: '30px' }}>
+    <>
+      <div className="animate-fade-in pb-8">
 
       {/* Header */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-6">
         <div>
-          <h1 style={{ fontSize: '28px', fontWeight: '800', color: 'var(--text-primary)', letterSpacing: '-0.02em', margin: 0 }}>Shipments</h1>
-          <p style={{ color: 'var(--text-secondary)', fontSize: '14px', marginTop: '4px' }}>Track and manage all courier logistics.</p>
+          <h1 className="text-2xl md:text-3xl font-extrabold text-[var(--text-primary)] tracking-tight">Shipments</h1>
+          <p className="text-[var(--text-secondary)] text-sm mt-1">Track and manage all courier logistics.</p>
         </div>
-        <button 
-          onClick={() => openModal()} 
-          className="btn-primary"
-          style={{
-            display: 'flex', alignItems: 'center', gap: '8px',
-            padding: '10px 20px', borderRadius: '12px', border: 'none',
-            color: '#fff', fontSize: '14px', fontWeight: '700',
-            cursor: 'pointer'
-          }}
+        <button
+          onClick={() => openModal()}
+          className="btn-primary flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl border-none text-white text-sm font-bold cursor-pointer w-full sm:w-auto"
         >
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
           Add New
@@ -146,77 +141,68 @@ export default function CouriersPage() {
 
       {/* Error Banner */}
       {error && (
-        <div style={{ 
-          display: 'flex', alignItems: 'center', gap: '12px', padding: '14px 20px', 
-          marginBottom: '20px', borderRadius: '12px', 
-          background: 'rgba(244,63,94,0.05)', border: '1px solid rgba(244,63,94,0.1)', 
-          color: '#f43f5e'
-        }}>
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-          <span style={{ flex: 1, fontSize: '13px', fontWeight: '600' }}>Database Connection Error: Please check if MySQL is running.</span>
-          <button onClick={fetchCouriers} style={{ background: '#f43f5e', border: 'none', color: '#fff', padding: '6px 12px', borderRadius: '8px', cursor: 'pointer', fontWeight: '700', fontSize: '12px' }}>Retry</button>
+        <div className="flex items-center gap-3 p-4 mb-5 rounded-xl bg-[rgba(244,63,94,0.05)] border border-[rgba(244,63,94,0.15)] text-[#f43f5e]">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          <span className="flex-1 text-xs font-semibold">Database Connection Error: Please check if MySQL is running.</span>
+          <button onClick={fetchCouriers} className="bg-[#f43f5e] text-white px-3 py-1.5 rounded-lg font-bold text-xs cursor-pointer border-none">Retry</button>
         </div>
       )}
 
       {/* Search */}
-      <div style={{ marginBottom: '20px' }}>
-        <div style={{ position: 'relative' }}>
-          <svg style={{ position: 'absolute', left: '14px', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-          <input
-            type="text" placeholder="Search by tracking id, sender or receiver..."
-            value={search} onChange={e => { setSearch(e.target.value); setPage(1); }}
-            style={{ width: '100%', boxSizing: 'border-box', background: 'var(--bg-card)', border: '1px solid var(--border-color)', borderRadius: '12px', padding: '12px 16px 12px 42px', color: 'var(--text-primary)', fontSize: '14px', outline: 'none' }}
-          />
-        </div>
+      <div className="relative mb-5">
+        <svg className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[var(--text-muted)]" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input
+          type="text" placeholder="Search by tracking id, sender or receiver..."
+          value={search} onChange={e => { setSearch(e.target.value); setPage(1); }}
+          className="w-full bg-[var(--bg-card)] border border-[var(--border-color)] rounded-xl py-3 pl-10 pr-4 text-[var(--text-primary)] text-sm outline-none"
+        />
       </div>
 
-      {/* Table */}
-      <div style={{ background: 'var(--bg-card)', border: '1px solid var(--border-color)', borderRadius: '16px', overflow: 'hidden', boxShadow: 'var(--shadow-card)' }}>
-        <div style={{ overflowX: 'auto' }}>
-          <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: '900px' }}>
+      {/* Desktop Table */}
+      <div className="hidden md:block bg-[var(--bg-card)] border border-[var(--border-color)] rounded-2xl overflow-hidden shadow-lg mb-6">
+        <div className="overflow-x-auto">
+          <table className="w-full border-collapse" style={{ minWidth: '700px' }}>
             <thead>
-              <tr style={{ background: 'var(--bg-primary)', borderBottom: '1px solid var(--border-color)' }}>
-                {['Tracking', 'Route Detail', 'Parties', 'Specs', 'Status', 'Actions'].map(h => (
-                  <th key={h} style={{ padding: '14px 20px', textAlign: 'left', fontSize: '11px', fontWeight: '800', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>{h}</th>
+              <tr className="bg-[var(--bg-primary)] border-b border-[var(--border-color)]">
+                {['Tracking', 'Route', 'Parties', 'Weight', 'Status', 'Actions'].map(h => (
+                  <th key={h} className="px-5 py-4 text-left text-[11px] font-extrabold text-[var(--text-muted)] uppercase tracking-wider">{h}</th>
                 ))}
               </tr>
             </thead>
             <tbody>
               {loading ? (
                 [...Array(3)].map((_, i) => (
-                  <tr key={i} style={{ borderBottom: '1px solid var(--border-color)' }}>
+                  <tr key={i} className="border-b border-[var(--border-color)]">
                     {[...Array(6)].map((_, j) => (
-                      <td key={j} style={{ padding: '16px 20px' }}><div className="skeleton" style={{ height: '14px', width: '80%' }} /></td>
+                      <td key={j} className="px-5 py-4"><div className="skeleton h-3.5" style={{ width: '75%' }} /></td>
                     ))}
                   </tr>
                 ))
               ) : couriers.length === 0 ? (
-                <tr>
-                  <td colSpan={6} style={{ padding: '60px 20px', textAlign: 'center', color: 'var(--text-muted)', fontSize: '14px' }}>No shipments found.</td>
-                </tr>
+                <tr><td colSpan={6} className="py-16 text-center text-[var(--text-muted)] text-sm">No shipments found.</td></tr>
               ) : (
-                couriers.map((c, idx) => (
-                  <tr key={c.courier_id} style={{ borderBottom: idx < couriers.length - 1 ? '1px solid var(--border-color)' : 'none' }}>
-                    <td style={{ padding: '16px 20px' }}>
-                      <span style={{ fontFamily: 'monospace', fontSize: '13px', fontWeight: '700', color: 'var(--accent-primary)' }}>{c.tracking_number}</span>
+                couriers.map((c) => (
+                  <tr key={c.courier_id} className="border-b border-[var(--border-color)] last:border-0 hover:bg-[var(--bg-card-hover)] transition-colors">
+                    <td className="px-5 py-4">
+                      <span className="font-mono text-sm font-bold text-[var(--accent-primary)]">{c.tracking_number}</span>
                     </td>
-                    <td style={{ padding: '16px 20px' }}>
-                      <div style={{ fontSize: '13px', color: 'var(--text-primary)', fontWeight: '600' }}>{c.origin} → {c.destination}</div>
-                      <div style={{ fontSize: '11px', color: 'var(--text-muted)' }}>{c.shipment_date ? new Date(c.shipment_date).toLocaleDateString() : 'Pending'}</div>
+                    <td className="px-5 py-4">
+                      <div className="text-sm font-semibold text-[var(--text-primary)]">{c.origin} → {c.destination}</div>
+                      <div className="text-[11px] text-[var(--text-muted)] mt-0.5" suppressHydrationWarning>{c.shipment_date ? new Date(c.shipment_date).toLocaleDateString() : 'Pending'}</div>
                     </td>
-                    <td style={{ padding: '16px 20px' }}>
-                      <div style={{ fontSize: '13px', color: 'var(--text-primary)' }}><strong>S:</strong> {c.sender_name || '—'}</div>
-                      <div style={{ fontSize: '13px', color: 'var(--text-primary)' }}><strong>R:</strong> {c.receiver_name || '—'}</div>
+                    <td className="px-5 py-4">
+                      <div className="text-xs text-[var(--text-primary)]"><strong>S:</strong> {c.sender_name || '—'}</div>
+                      <div className="text-xs text-[var(--text-primary)] mt-0.5"><strong>R:</strong> {c.receiver_name || '—'}</div>
                     </td>
-                    <td style={{ padding: '16px 20px', fontSize: '13px', color: 'var(--text-secondary)' }}>{c.package_weight} KG</td>
-                    <td style={{ padding: '16px 20px' }}><StatusBadge status={c.current_status} /></td>
-                    <td style={{ padding: '16px 20px' }}>
-                      <div style={{ display: 'flex', gap: '6px' }}>
-                        <Link href={`/dashboard/couriers/${c.courier_id}/history`} title="Timeline" style={{ padding: '6px', borderRadius: '8px', background: 'rgba(99,102,241,0.1)', color: 'var(--accent-primary)', display: 'flex' }}>
-                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                    <td className="px-5 py-4 text-sm text-[var(--text-secondary)]">{c.package_weight} KG</td>
+                    <td className="px-5 py-4"><StatusBadge status={c.current_status} /></td>
+                    <td className="px-5 py-4">
+                      <div className="flex gap-1.5">
+                        <Link href={`/dashboard/couriers/${c.courier_id}/history`} className="p-1.5 rounded-lg bg-[rgba(99,102,241,0.1)] text-[var(--accent-primary)] flex hover:bg-[rgba(99,102,241,0.2)] transition-colors">
+                          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
                         </Link>
-                        <button onClick={() => openModal(c)} title="Edit" style={{ border: 'none', padding: '6px', borderRadius: '8px', background: 'rgba(14,165,233,0.1)', color: 'var(--accent-sky)', display: 'flex', cursor: 'pointer' }}>
-                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                        <button onClick={() => openModal(c)} className="p-1.5 rounded-lg bg-[rgba(14,165,233,0.1)] text-[var(--accent-sky)] flex cursor-pointer border-none hover:bg-[rgba(14,165,233,0.2)] transition-colors">
+                          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
                         </button>
                       </div>
                     </td>
@@ -228,114 +214,176 @@ export default function CouriersPage() {
         </div>
       </div>
 
+      {/* Mobile Cards */}
+      <div className="md:hidden space-y-3 mb-6">
+        {loading ? (
+          [...Array(3)].map((_, i) => (
+            <div key={i} className="bg-[var(--bg-card)] border border-[var(--border-color)] rounded-xl p-4">
+              <div className="h-4 w-36 skeleton mb-2" />
+              <div className="h-3 w-48 skeleton mb-1" />
+              <div className="h-3 w-32 skeleton" />
+            </div>
+          ))
+        ) : couriers.length === 0 ? (
+          <div className="text-center py-12 text-[var(--text-muted)] text-sm">No shipments found.</div>
+        ) : (
+          couriers.map((c) => (
+            <div key={c.courier_id} className="bg-[var(--bg-card)] border border-[var(--border-color)] rounded-xl p-4">
+              {/* Card Header */}
+              <div className="flex justify-between items-start mb-3">
+                <div>
+                  <span className="font-mono text-sm font-bold text-[var(--accent-primary)]">{c.tracking_number}</span>
+                  <div className="text-[11px] text-[var(--text-muted)] mt-0.5">{c.shipment_date ? new Date(c.shipment_date).toLocaleDateString() : 'Pending'}</div>
+                </div>
+                <StatusBadge status={c.current_status} />
+              </div>
+              {/* Route */}
+              <div className="flex items-center gap-2 text-sm font-semibold text-[var(--text-primary)] mb-3">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-[var(--text-muted)] flex-shrink-0"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                {c.origin} → {c.destination}
+              </div>
+              {/* Details */}
+              <div className="grid grid-cols-2 gap-2 text-xs text-[var(--text-secondary)] mb-3">
+                <div><span className="font-bold text-[var(--text-muted)]">Sender:</span> {c.sender_name || '—'}</div>
+                <div><span className="font-bold text-[var(--text-muted)]">Receiver:</span> {c.receiver_name || '—'}</div>
+                <div><span className="font-bold text-[var(--text-muted)]">Weight:</span> {c.package_weight} KG</div>
+                <div><span className="font-bold text-[var(--text-muted)]">ETA:</span> <span suppressHydrationWarning>{c.expected_delivery ? new Date(c.expected_delivery).toLocaleDateString() : '—'}</span></div>
+              </div>
+              {/* Actions */}
+              <div className="flex gap-2 pt-3 border-t border-[var(--border-color)]">
+                <Link href={`/dashboard/couriers/${c.courier_id}/history`} className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg bg-[rgba(99,102,241,0.1)] text-[var(--accent-primary)] text-xs font-bold hover:bg-[rgba(99,102,241,0.2)] transition-colors">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                  History
+                </Link>
+                <button onClick={() => openModal(c)} className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg bg-[rgba(14,165,233,0.1)] text-[var(--accent-sky)] text-xs font-bold border-none cursor-pointer hover:bg-[rgba(14,165,233,0.2)] transition-colors">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                  Edit
+                </button>
+              </div>
+            </div>
+          ))
+        )}
+      </div>
+
+      {/* Pagination */}
+      {totalPages > 1 && (
+        <div className="flex justify-between items-center bg-[var(--bg-card)] border border-[var(--border-color)] rounded-xl p-3 md:p-4 shadow-lg mb-4">
+          <button onClick={() => setPage(page - 1)} disabled={page === 1}
+            className="flex items-center gap-1 px-3 py-2 text-xs md:text-sm font-medium text-[var(--text-secondary)] bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-lg hover:bg-[var(--bg-card-hover)] disabled:opacity-30 disabled:cursor-not-allowed transition-all">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="15 18 9 12 15 6"/></svg>Prev
+          </button>
+          <span className="text-xs md:text-sm text-[var(--text-secondary)] font-medium">
+            <span className="text-[var(--text-primary)]">{page}</span> / <span className="text-[var(--text-primary)]">{totalPages}</span>
+          </span>
+          <button onClick={() => setPage(page + 1)} disabled={page === totalPages}
+            className="flex items-center gap-1 px-3 py-2 text-xs md:text-sm font-medium text-[var(--text-secondary)] bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-lg hover:bg-[var(--bg-card-hover)] disabled:opacity-30 disabled:cursor-not-allowed transition-all">
+            Next<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="9 18 15 12 9 6"/></svg>
+          </button>
+        </div>
+      )}
+
+      </div>
+
       {/* Compact Modal */}
       {showModal && (
         <div 
           onClick={closeModal} 
-          style={{ 
-            position: 'fixed', inset: 0, background: 'rgba(15,23,42,0.4)', 
-            backdropFilter: 'blur(4px)',
-            display: 'flex', alignItems: 'center', justifyContent: 'center', 
-            zIndex: 1000, padding: '16px'
-          }}
+          className="fixed inset-0 bg-slate-950/90 backdrop-blur-md flex items-center justify-center z-[9999] p-4 overflow-y-auto animate-fade-in"
         >
           <div 
             onClick={e => e.stopPropagation()} 
-            className="animate-modal-in"
-            style={{ 
-              background: 'var(--bg-card)', border: '1px solid var(--border-color)', 
-              borderRadius: '20px', width: '100%', maxWidth: '520px', 
-              boxShadow: '0 20px 40px rgba(0,0,0,0.1)', overflow: 'hidden' 
-            }}
+            className="bg-[var(--bg-card)] border border-[var(--border-color)] rounded-3xl w-full max-w-lg shadow-[0_0_50px_rgba(0,0,0,0.5)] animate-modal-in overflow-hidden my-auto"
           >
-            <div style={{ padding: '18px 24px', borderBottom: '1px solid var(--border-color)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <h2 style={{ margin: 0, fontSize: '17px', fontWeight: '800', color: 'var(--text-primary)' }}>
-                {editingCourier ? 'Edit Shipment' : 'New Shipment'}
+            <div className="p-5 md:p-6 border-b border-[var(--border-color)] bg-[var(--bg-primary)]/50 flex justify-between items-center sticky top-0 z-10 backdrop-blur-md">
+              <h2 className="m-0 text-lg md:text-xl font-extrabold text-[var(--text-primary)] tracking-tight">
+                {editingCourier ? 'Update Shipment' : 'Create Shipment'}
               </h2>
-              <button onClick={closeModal} style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', padding: '4px' }}>
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+              <button onClick={closeModal} className="bg-none border-none text-[var(--text-muted)] cursor-pointer p-2 hover:bg-[var(--bg-secondary)] rounded-full transition-colors">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" /></svg>
               </button>
             </div>
 
-            <form onSubmit={handleSubmit} style={{ padding: '20px 24px' }}>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
-                
-                <div style={{ gridColumn: '1 / -1' }}>
-                  <label style={{ display: 'block', fontSize: '11px', fontWeight: '700', color: 'var(--text-muted)', textTransform: 'uppercase', marginBottom: '6px' }}>Tracking Number</label>
-                  <input type="text" required value={formData.tracking_number} onChange={e => setFormData(f => ({ ...f, tracking_number: e.target.value }))}
-                    style={{ width: '100%', boxSizing: 'border-box', background: 'var(--bg-primary)', border: '1px solid var(--border-color)', borderRadius: '10px', padding: '10px 14px', color: 'var(--accent-primary)', fontSize: '14px', fontFamily: 'monospace', fontWeight: '700', outline: 'none' }}
-                  />
-                </div>
+            <form onSubmit={handleSubmit} className="flex flex-col max-h-[90vh]">
+              <div className="flex-1 overflow-y-auto p-4 md:p-7 custom-scrollbar">
+                <div className="grid grid-cols-2 gap-3 md:gap-4">
+                  <div className="col-span-2">
+                    <label className="block text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-wider mb-1">Tracking Number</label>
+                    <input type="text" required value={formData.tracking_number} onChange={e => setFormData(f => ({ ...f, tracking_number: e.target.value }))}
+                      className="w-full bg-[var(--bg-primary)] border border-[var(--border-color)] rounded-xl py-2 px-4 text-[var(--accent-primary)] text-sm font-mono font-bold outline-none"
+                    />
+                  </div>
 
-                <div>
-                  <label style={{ display: 'block', fontSize: '11px', fontWeight: '700', color: 'var(--text-muted)', textTransform: 'uppercase', marginBottom: '6px' }}>Sender</label>
-                  <select required value={formData.sender_id} onChange={e => setFormData(f => ({ ...f, sender_id: e.target.value }))}
-                    style={{ width: '100%', boxSizing: 'border-box', background: 'var(--bg-secondary)', border: '1px solid var(--border-color)', borderRadius: '10px', padding: '10px', color: 'var(--text-primary)', fontSize: '13px', outline: 'none' }}>
-                    <option value="">Select...</option>
-                    {customers.map(cu => <option key={cu.customer_id} value={cu.customer_id}>{cu.full_name}</option>)}
-                  </select>
-                </div>
+                  <div className="col-span-1">
+                    <label className="block text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-wider mb-1">Sender</label>
+                    <select required value={formData.sender_id} onChange={e => setFormData(f => ({ ...f, sender_id: e.target.value }))}
+                      className="w-full bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-xl py-2 px-3 text-[var(--text-primary)] text-xs outline-none">
+                      <option value="">Select...</option>
+                      {customers.map(cu => <option key={cu.customer_id} value={cu.customer_id}>{cu.full_name}</option>)}
+                    </select>
+                  </div>
 
-                <div>
-                  <label style={{ display: 'block', fontSize: '11px', fontWeight: '700', color: 'var(--text-muted)', textTransform: 'uppercase', marginBottom: '6px' }}>Receiver</label>
-                  <select required value={formData.receiver_id} onChange={e => setFormData(f => ({ ...f, receiver_id: e.target.value }))}
-                    style={{ width: '100%', boxSizing: 'border-box', background: 'var(--bg-secondary)', border: '1px solid var(--border-color)', borderRadius: '10px', padding: '10px', color: 'var(--text-primary)', fontSize: '13px', outline: 'none' }}>
-                    <option value="">Select...</option>
-                    {customers.map(cu => <option key={cu.customer_id} value={cu.customer_id}>{cu.full_name}</option>)}
-                  </select>
-                </div>
+                  <div className="col-span-1">
+                    <label className="block text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-wider mb-1">Receiver</label>
+                    <select required value={formData.receiver_id} onChange={e => setFormData(f => ({ ...f, receiver_id: e.target.value }))}
+                      className="w-full bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-xl py-2 px-3 text-[var(--text-primary)] text-xs outline-none">
+                      <option value="">Select...</option>
+                      {customers.map(cu => <option key={cu.customer_id} value={cu.customer_id}>{cu.full_name}</option>)}
+                    </select>
+                  </div>
 
-                <div>
-                  <label style={{ display: 'block', fontSize: '11px', fontWeight: '700', color: 'var(--text-muted)', textTransform: 'uppercase', marginBottom: '6px' }}>Origin</label>
-                  <input type="text" required placeholder="City" value={formData.origin} onChange={e => setFormData(f => ({ ...f, origin: e.target.value }))}
-                    style={{ width: '100%', boxSizing: 'border-box', background: 'var(--bg-secondary)', border: '1px solid var(--border-color)', borderRadius: '10px', padding: '10px', color: 'var(--text-primary)', fontSize: '13px', outline: 'none' }}
-                  />
-                </div>
+                  <div className="col-span-1">
+                    <label className="block text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-wider mb-1">Origin</label>
+                    <input type="text" required placeholder="City" value={formData.origin} onChange={e => setFormData(f => ({ ...f, origin: e.target.value }))}
+                      className="w-full bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-xl py-2 px-3 text-[var(--text-primary)] text-xs outline-none"
+                    />
+                  </div>
 
-                <div>
-                  <label style={{ display: 'block', fontSize: '11px', fontWeight: '700', color: 'var(--text-muted)', textTransform: 'uppercase', marginBottom: '6px' }}>Destination</label>
-                  <input type="text" required placeholder="City" value={formData.destination} onChange={e => setFormData(f => ({ ...f, destination: e.target.value }))}
-                    style={{ width: '100%', boxSizing: 'border-box', background: 'var(--bg-secondary)', border: '1px solid var(--border-color)', borderRadius: '10px', padding: '10px', color: 'var(--text-primary)', fontSize: '13px', outline: 'none' }}
-                  />
-                </div>
+                  <div className="col-span-1">
+                    <label className="block text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-wider mb-1">Destination</label>
+                    <input type="text" required placeholder="City" value={formData.destination} onChange={e => setFormData(f => ({ ...f, destination: e.target.value }))}
+                      className="w-full bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-xl py-2 px-3 text-[var(--text-primary)] text-xs outline-none"
+                    />
+                  </div>
 
-                <div>
-                  <label style={{ display: 'block', fontSize: '11px', fontWeight: '700', color: 'var(--text-muted)', textTransform: 'uppercase', marginBottom: '6px' }}>Weight (KG)</label>
-                  <input type="number" step="0.01" required value={formData.package_weight} onChange={e => setFormData(f => ({ ...f, package_weight: e.target.value }))}
-                    style={{ width: '100%', boxSizing: 'border-box', background: 'var(--bg-secondary)', border: '1px solid var(--border-color)', borderRadius: '10px', padding: '10px', color: 'var(--text-primary)', fontSize: '13px', outline: 'none' }}
-                  />
-                </div>
+                  <div className="col-span-1">
+                    <label className="block text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-wider mb-1">Weight (KG)</label>
+                    <input type="number" step="0.01" required value={formData.package_weight} onChange={e => setFormData(f => ({ ...f, package_weight: e.target.value }))}
+                      className="w-full bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-xl py-2 px-3 text-[var(--text-primary)] text-xs outline-none"
+                    />
+                  </div>
 
-                <div>
-                  <label style={{ display: 'block', fontSize: '11px', fontWeight: '700', color: 'var(--text-muted)', textTransform: 'uppercase', marginBottom: '6px' }}>Delivery Date</label>
-                  <input type="date" required value={formData.expected_delivery} onChange={e => setFormData(f => ({ ...f, expected_delivery: e.target.value }))}
-                    style={{ width: '100%', boxSizing: 'border-box', background: 'var(--bg-secondary)', border: '1px solid var(--border-color)', borderRadius: '10px', padding: '10px', color: 'var(--text-primary)', fontSize: '13px', outline: 'none', colorScheme: 'light' }}
-                  />
-                </div>
+                  <div className="col-span-1">
+                    <label className="block text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-wider mb-1">Delivery Date</label>
+                    <input type="date" required value={formData.expected_delivery} onChange={e => setFormData(f => ({ ...f, expected_delivery: e.target.value }))}
+                      className="w-full bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-xl py-2 px-3 text-[var(--text-primary)] text-xs outline-none"
+                      style={{ colorScheme: 'dark' }}
+                    />
+                  </div>
 
-                <div style={{ gridColumn: '1 / -1' }}>
-                  <label style={{ display: 'block', fontSize: '11px', fontWeight: '700', color: 'var(--text-muted)', textTransform: 'uppercase', marginBottom: '8px' }}>Status</label>
-                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
-                    {statusOptions.map(s => (
-                      <button type="button" key={s} onClick={() => setFormData(f => ({ ...f, current_status: s }))}
-                        style={{ padding: '6px 12px', borderRadius: '8px', border: '1px solid', borderColor: formData.current_status === s ? 'var(--accent-primary)' : 'var(--border-color)', background: formData.current_status === s ? 'rgba(99,102,241,0.1)' : 'transparent', color: formData.current_status === s ? 'var(--accent-primary)' : 'var(--text-secondary)', fontSize: '11px', fontWeight: '700', cursor: 'pointer' }}>
-                        {s}
-                      </button>
-                    ))}
+                  <div className="col-span-2">
+                    <label className="block text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-wider mb-2">Status Milestone</label>
+                    <div className="grid grid-cols-3 gap-1.5">
+                      {statusOptions.map(s => (
+                        <button type="button" key={s} onClick={() => setFormData(f => ({ ...f, current_status: s }))}
+                          className={`px-1 py-2 rounded-lg border text-[9px] font-bold transition-all truncate ${formData.current_status === s ? 'border-[var(--accent-primary)] bg-indigo-500/10 text-[var(--accent-primary)]' : 'border-[var(--border-color)] text-[var(--text-secondary)] hover:bg-[var(--bg-secondary)]'}`}>
+                          {s}
+                        </button>
+                      ))}
+                    </div>
                   </div>
                 </div>
               </div>
 
-              <div style={{ display: 'flex', gap: '10px', marginTop: '24px' }}>
-                <button type="button" onClick={closeModal} style={{ flex: 1, padding: '12px', borderRadius: '12px', border: '1px solid var(--border-color)', background: 'transparent', color: 'var(--text-secondary)', fontSize: '14px', fontWeight: '600', cursor: 'pointer' }}>Discard</button>
-                <button type="submit" disabled={submitting} className="btn-primary" style={{ flex: 1.5, padding: '12px', borderRadius: '12px', border: 'none', color: '#fff', fontSize: '14px', fontWeight: '700', cursor: submitting ? 'not-allowed' : 'pointer' }}>
-                  {submitting ? 'Saving...' : editingCourier ? 'Update' : 'Confirm'}
+              <div className="p-4 border-t border-[var(--border-color)] bg-[var(--bg-primary)]/30 flex flex-col gap-2">
+                <button type="submit" disabled={submitting} className="btn-primary py-3 rounded-xl border-none text-white text-sm font-bold shadow-lg shadow-indigo-500/20 disabled:opacity-50">
+                  {submitting ? 'Saving...' : editingCourier ? 'Update Shipment' : 'Confirm Shipment'}
                 </button>
+                <button type="button" onClick={closeModal} className="py-2.5 rounded-xl border border-[var(--border-color)] bg-transparent text-[var(--text-secondary)] text-xs font-bold cursor-pointer hover:bg-[var(--bg-secondary)] transition-all">Discard</button>
               </div>
             </form>
           </div>
         </div>
       )}
-    </div>
+    </>
   );
 }

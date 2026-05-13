@@ -46,6 +46,7 @@ const navItems = [
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const pathname = usePathname();
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [loggingOut, setLoggingOut] = useState(false);
 
   const handleLogout = async () => {
@@ -54,139 +55,126 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     router.push('/');
   };
 
+  const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
+
   return (
-    <div style={{ minHeight: '100vh', background: 'var(--bg-primary)' }}>
+    <div className="min-h-screen bg-[var(--bg-primary)]">
+      
+      {/* Mobile Header */}
+      <header className="lg:hidden h-16 bg-[var(--bg-secondary)] border-b border-[var(--border-color)] flex items-center justify-between px-4 sticky top-0 z-[60]">
+        <div className="flex items-center gap-3">
+          <div className="w-8 h-8 bg-gradient-to-br from-indigo-500 to-purple-500 rounded-lg flex items-center justify-center">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2">
+              <rect x="1" y="3" width="15" height="13" rx="2" /><path d="M16 8h4l3 3v5h-7V8z" /><circle cx="5.5" cy="18.5" r="2.5" /><circle cx="18.5" cy="18.5" r="2.5" />
+            </svg>
+          </div>
+          <span className="font-bold text-sm text-[var(--text-primary)]">Courier Admin</span>
+        </div>
+        <button 
+          onClick={toggleSidebar}
+          className="p-2 text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors"
+        >
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            {isSidebarOpen ? <path d="M18 6L6 18M6 6l12 12" /> : <path d="M3 12h18M3 6h18M3 18h18" />}
+          </svg>
+        </button>
+      </header>
 
-      {/* ── Sidebar (fixed left column) ── */}
-      <aside style={{
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        bottom: 0,
-        width: '240px',
-        background: 'var(--bg-secondary)',
-        borderRight: '1px solid var(--border-color)',
-        display: 'flex',
-        flexDirection: 'column',
-        zIndex: 50,
-        overflowY: 'auto',
-      }}>
+      {/* Sidebar Overlay */}
+      {isSidebarOpen && (
+        <div 
+          className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[70] lg:hidden"
+          onClick={() => setIsSidebarOpen(false)}
+        />
+      )}
 
-        {/* Brand */}
-        <div style={{ padding: '20px 16px', borderBottom: '1px solid var(--border-color)' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-            <div style={{
-              width: '36px', height: '36px',
-              background: 'linear-gradient(135deg, #6366f1, #8b5cf6)',
-              borderRadius: '10px', display: 'flex', alignItems: 'center',
-              justifyContent: 'center', flexShrink: 0,
-              boxShadow: '0 4px 12px rgba(99,102,241,0.35)',
-            }}>
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2">
-                <rect x="1" y="3" width="15" height="13" rx="2" />
-                <path d="M16 8h4l3 3v5h-7V8z" />
-                <circle cx="5.5" cy="18.5" r="2.5" />
-                <circle cx="18.5" cy="18.5" r="2.5" />
-              </svg>
-            </div>
-            <div>
-              <div style={{ fontWeight: '700', fontSize: '15px', color: 'var(--text-primary)' }}>Courier Admin</div>
-              <div style={{ fontSize: '11px', color: 'var(--text-muted)' }}>Management Panel</div>
-            </div>
+      {/* Sidebar */}
+      <aside className={`
+        fixed inset-y-0 left-0 w-64 bg-[var(--bg-secondary)] border-r border-[var(--border-color)] 
+        flex flex-col z-[80] transition-transform duration-300 lg:translate-x-0
+        ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}
+      `}>
+        {/* Brand (Desktop only) */}
+        <div className="hidden lg:flex items-center gap-3 p-6 border-b border-[var(--border-color)]">
+          <div className="w-9 h-9 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg shadow-indigo-500/20">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2">
+              <rect x="1" y="3" width="15" height="13" rx="2" /><path d="M16 8h4l3 3v5h-7V8z" /><circle cx="5.5" cy="18.5" r="2.5" /><circle cx="18.5" cy="18.5" r="2.5" />
+            </svg>
+          </div>
+          <div>
+            <div className="font-bold text-[15px] text-[var(--text-primary)] leading-none mb-1">Courier Admin</div>
+            <div className="text-[11px] text-[var(--text-muted)]">Management Panel</div>
           </div>
         </div>
 
-        {/* Nav */}
-        <nav style={{ flex: 1, padding: '12px 10px' }}>
-          <p style={{ fontSize: '10px', fontWeight: '600', color: 'var(--text-muted)', letterSpacing: '0.8px', textTransform: 'uppercase', padding: '0 10px', marginBottom: '6px' }}>
-            Menu
-          </p>
+        {/* Navigation */}
+        <nav className="flex-1 px-3 py-4 space-y-1">
+          <p className="px-3 text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-wider mb-4">Main Menu</p>
           {navItems.map((item) => {
             const isActive = pathname === item.href || (item.href !== '/dashboard' && pathname.startsWith(item.href));
             return (
-              <Link key={item.href} href={item.href} style={{
-                display: 'flex', alignItems: 'center', gap: '10px',
-                padding: '10px 12px', borderRadius: '8px', marginBottom: '2px',
-                textDecoration: 'none', fontSize: '14px',
-                fontWeight: isActive ? '600' : '400',
-                color: isActive ? 'var(--accent-primary)' : 'var(--text-secondary)',
-                background: isActive ? 'rgba(79, 70, 229, 0.08)' : 'transparent',
-                borderLeft: isActive ? '2px solid var(--accent-primary)' : '2px solid transparent',
-                transition: 'all 0.15s ease',
-              }}>
-                <span style={{ opacity: isActive ? 1 : 0.7 }}>{item.icon}</span>
+              <Link 
+                key={item.href} 
+                href={item.href}
+                onClick={() => setIsSidebarOpen(false)}
+                className={`
+                  flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-all duration-200
+                  ${isActive 
+                    ? 'bg-indigo-500/10 text-indigo-400 font-semibold border-l-2 border-indigo-500' 
+                    : 'text-[var(--text-secondary)] hover:bg-[var(--bg-primary)] hover:text-[var(--text-primary)]'}
+                `}
+              >
+                <span className={isActive ? 'opacity-100' : 'opacity-70'}>{item.icon}</span>
                 {item.label}
               </Link>
             );
           })}
         </nav>
 
-        {/* Footer / Logout */}
-        <div style={{ padding: '12px 10px', borderTop: '1px solid var(--border-color)' }}>
-          <div style={{
-            display: 'flex', alignItems: 'center', gap: '10px',
-            padding: '10px 12px', borderRadius: '8px',
-            background: 'var(--bg-primary)', marginBottom: '8px',
-          }}>
-            <div style={{
-              width: '32px', height: '32px',
-              background: 'linear-gradient(135deg, #6366f1, #8b5cf6)',
-              borderRadius: '50%', display: 'flex', alignItems: 'center',
-              justifyContent: 'center', fontSize: '13px', fontWeight: '600',
-              color: 'white', flexShrink: 0,
-            }}>A</div>
-            <div>
-              <div style={{ fontSize: '13px', fontWeight: '500', color: 'var(--text-primary)' }}>Admin</div>
-              <div style={{ fontSize: '11px', color: 'var(--text-muted)' }}>Administrator</div>
+        {/* Sidebar Footer */}
+        <div className="p-4 border-t border-[var(--border-color)] bg-[var(--bg-primary)]/30">
+          <div className="flex items-center gap-3 mb-4 px-2">
+            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center text-white text-xs font-bold">A</div>
+            <div className="overflow-hidden">
+              <p className="text-xs font-semibold text-[var(--text-primary)] truncate">Admin Account</p>
+              <p className="text-[10px] text-[var(--text-muted)] truncate text-indigo-400">System Admin</p>
             </div>
           </div>
           <button
             onClick={handleLogout}
             disabled={loggingOut}
-            style={{
-              width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center',
-              gap: '8px', padding: '9px 12px', borderRadius: '8px',
-              border: '1px solid rgba(239,68,68,0.2)', background: 'rgba(239,68,68,0.04)',
-              color: 'var(--accent-rose)', fontSize: '13px', fontWeight: '500',
-              cursor: loggingOut ? 'not-allowed' : 'pointer',
-              opacity: loggingOut ? 0.6 : 1, transition: 'all 0.15s ease',
-            }}
+            className="w-full flex items-center justify-center gap-2 py-2 px-4 rounded-lg bg-red-500/10 border border-red-500/20 text-red-500 text-xs font-medium hover:bg-red-500 hover:text-white transition-all duration-200 disabled:opacity-50"
           >
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
-              <polyline points="16 17 21 12 16 7" />
-              <line x1="21" y1="12" x2="9" y2="12" />
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" /><polyline points="16 17 21 12 16 7" /><line x1="21" y1="12" x2="9" y2="12" />
             </svg>
             {loggingOut ? 'Signing out...' : 'Sign Out'}
           </button>
         </div>
       </aside>
 
-      {/* ── Main area (shifted right of sidebar) ── */}
-      <div style={{ marginLeft: '240px', minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
-
-        {/* Top bar */}
-        <div style={{
-          height: '56px', background: 'var(--bg-secondary)',
-          borderBottom: '1px solid var(--border-color)',
-          display: 'flex', alignItems: 'center',
-          padding: '0 28px', justifyContent: 'space-between',
-        }}>
-          <p style={{ fontSize: '12px', color: 'var(--text-muted)' }}>
+      {/* Main Content */}
+      <main className="lg:ml-64 flex flex-col min-h-screen">
+        {/* Header bar (Desktop only) */}
+        <div className="hidden lg:flex h-16 items-center justify-between px-8 bg-[var(--bg-secondary)] border-b border-[var(--border-color)] sticky top-0 z-40 backdrop-blur-md bg-opacity-80">
+          <div className="text-xs text-[var(--text-muted)] font-medium">
             {new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
-          </p>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <div style={{ width: '8px', height: '8px', background: '#10b981', borderRadius: '50%', boxShadow: '0 0 6px rgba(16,185,129,0.5)' }} />
-            <span style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>System Online</span>
+          </div>
+          <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20">
+              <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_8px_rgba(16,185,129,0.6)]" />
+              <span className="text-[10px] font-bold text-emerald-500 uppercase tracking-tight">System Online</span>
+            </div>
           </div>
         </div>
 
-        {/* Page content */}
-        <div style={{ flex: 1, padding: '28px', maxWidth: '1400px', width: '100%', margin: '0 auto' }}>
-          {children}
+        {/* Content Wrapper */}
+        <div className="flex-1 p-4 md:p-6 lg:p-8">
+          <div className="max-w-7xl mx-auto">
+            {children}
+          </div>
         </div>
-      </div>
-
+      </main>
     </div>
   );
 }

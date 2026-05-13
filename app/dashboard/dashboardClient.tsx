@@ -116,51 +116,49 @@ export default function DashboardHome() {
         )}
       </div>
       
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4 md:gap-6 mb-8">
         {statCards.map((stat, index) => (
-          <div key={index} className="bg-[var(--bg-card)] border border-[var(--border-color)] rounded-2xl p-6 card-hover shadow-lg">
+          <div key={index} className="bg-[var(--bg-card)] border border-[var(--border-color)] rounded-2xl p-5 md:p-6 card-hover shadow-lg">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-[var(--text-secondary)] text-sm font-medium uppercase tracking-wider">{stat.title}</p>
+                <p className="text-[var(--text-secondary)] text-[10px] md:text-sm font-medium uppercase tracking-wider">{stat.title}</p>
                 {loading ? (
-                  <div className="h-10 w-24 skeleton mt-2" />
+                  <div className="h-8 md:h-10 w-20 md:w-24 skeleton mt-2" />
                 ) : (
-                  <p className="text-4xl font-bold text-[var(--text-primary)] mt-1">{stat.value.toLocaleString()}</p>
+                  <p className="text-2xl md:text-4xl font-bold text-[var(--text-primary)] mt-1">{stat.value.toLocaleString()}</p>
                 )}
               </div>
               <div 
-                className="rounded-xl w-14 h-14 flex items-center justify-center text-white"
+                className="rounded-xl w-12 h-12 md:w-14 md:h-14 flex items-center justify-center text-white shrink-0"
                 style={{ backgroundColor: stat.bg, color: stat.color }}
               >
                 {stat.icon}
               </div>
             </div>
             <div className="mt-4 pt-4 border-t border-[var(--border-color)] flex items-center gap-2">
-              <span className="text-[var(--accent-emerald)] text-xs font-semibold flex items-center gap-1">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
+              <span className="text-[var(--accent-emerald)] text-[10px] md:text-xs font-semibold flex items-center gap-1">
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
                   <polyline points="18 15 12 9 6 15" />
                 </svg>
                 Active
               </span>
-              <span className="text-[var(--text-muted)] text-xs">Real-time data</span>
+              <span className="text-[var(--text-muted)] text-[10px] md:text-xs">Real-time data</span>
             </div>
           </div>
         ))}
       </div>
 
-      <div className="bg-[var(--bg-card)] border border-[var(--border-color)] rounded-2xl p-8 shadow-lg">
-        <div className="flex items-center justify-between mb-6">
-          <div>
-            <h2 className="text-xl font-bold text-[var(--text-primary)]">Quick Actions</h2>
-            <p className="text-[var(--text-secondary)] text-sm mt-1">Frequently used management tools</p>
-          </div>
+      <div className="bg-[var(--bg-card)] border border-[var(--border-color)] rounded-2xl p-6 md:p-8 shadow-lg">
+        <div className="mb-6">
+          <h2 className="text-lg md:text-xl font-bold text-[var(--text-primary)]">Quick Actions</h2>
+          <p className="text-[var(--text-secondary)] text-xs md:text-sm mt-1">Frequently used management tools</p>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
           <Link
             href="/dashboard/customers"
-            className="group relative overflow-hidden bg-[var(--bg-secondary)] border border-[var(--border-color)] p-6 rounded-xl hover:border-[var(--accent-primary)] transition-all duration-300"
+            className="group relative overflow-hidden bg-[var(--bg-secondary)] border border-[var(--border-color)] p-5 md:p-6 rounded-xl hover:border-[var(--accent-primary)] transition-all duration-300"
           >
-            <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
+            <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity hidden md:block">
               <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
                 <circle cx="9" cy="7" r="4" />
@@ -175,16 +173,16 @@ export default function DashboardHome() {
                   <line x1="16" y1="11" x2="22" y2="11" />
                 </svg>
               </div>
-              <h3 className="text-lg font-semibold text-[var(--text-primary)] mb-1">Manage Customers</h3>
-              <p className="text-[var(--text-secondary)] text-sm">Add, edit, or remove customer profiles and contact details.</p>
+              <h3 className="text-base md:text-lg font-semibold text-[var(--text-primary)] mb-1">Manage Customers</h3>
+              <p className="text-[var(--text-secondary)] text-xs md:text-sm">Add, edit, or remove customer profiles and contact details.</p>
             </div>
           </Link>
           
           <Link
             href="/dashboard/couriers"
-            className="group relative overflow-hidden bg-[var(--bg-secondary)] border border-[var(--border-color)] p-6 rounded-xl hover:border-[var(--accent-emerald)] transition-all duration-300"
+            className="group relative overflow-hidden bg-[var(--bg-secondary)] border border-[var(--border-color)] p-5 md:p-6 rounded-xl hover:border-[var(--accent-emerald)] transition-all duration-300"
           >
-            <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
+            <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity hidden md:block">
               <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <rect x="1" y="3" width="15" height="13" rx="2" />
                 <path d="M16 8h4l3 3v5h-7V8z" />
@@ -199,8 +197,8 @@ export default function DashboardHome() {
                   <circle cx="18.5" cy="18.5" r="2.5" />
                 </svg>
               </div>
-              <h3 className="text-lg font-semibold text-[var(--text-primary)] mb-1">Manage Couriers</h3>
-              <p className="text-[var(--text-secondary)] text-sm">Create shipments, track delivery status, and update routes.</p>
+              <h3 className="text-base md:text-lg font-semibold text-[var(--text-primary)] mb-1">Manage Couriers</h3>
+              <p className="text-[var(--text-secondary)] text-xs md:text-sm">Create shipments, track delivery status, and update routes.</p>
             </div>
           </Link>
         </div>
