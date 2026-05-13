@@ -24,11 +24,11 @@ export async function GET(
     });
   } catch (error) {
     console.error('Error fetching history:', error);
-    return NextResponse.json({ error: 'Failed to fetch history' }, { status: 500 }, {
-      headers: {
-        'Access-Control-Allow-Origin': '*',
-      }
-    });
+    // Correct: Only 2 arguments
+    return NextResponse.json(
+      { error: 'Failed to fetch history' }, 
+      { status: 500, headers: { 'Access-Control-Allow-Origin': '*' } }
+    );
   }
 }
 
