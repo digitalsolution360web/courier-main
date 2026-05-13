@@ -79,34 +79,31 @@ export default function LoginPage() {
         <div className="text-center mb-8">
           <div
             style={{
-              width: "52px",
-              height: "52px",
-              background: "linear-gradient(135deg, #6366f1, #8b5cf6)",
-              borderRadius: "14px",
+              width: "100px",
+              height: "100px",
+              background: "#ffffff",
+              borderRadius: "24px",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
               margin: "0 auto 16px",
-              boxShadow: "0 8px 24px rgba(99,102,241,0.4)",
+              padding: "12px",
+              boxShadow: "0 10px 40px rgba(0,0,0,0.3)",
+              border: "1px solid rgba(255,255,255,0.1)",
             }}
           >
-            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <rect x="1" y="3" width="15" height="13" rx="2" />
-              <path d="M16 8h4l3 3v5h-7V8z" />
-              <circle cx="5.5" cy="18.5" r="2.5" />
-              <circle cx="18.5" cy="18.5" r="2.5" />
-            </svg>
+            <img src="/logo.webp" alt="Logo" style={{ width: "100%", height: "100%", objectFit: "contain" }} />
           </div>
           <h1
             style={{
-              fontSize: "26px",
-              fontWeight: "700",
+              fontSize: "28px",
+              fontWeight: "800",
               color: "var(--text-primary)",
               letterSpacing: "-0.5px",
-              marginBottom: "6px",
+              marginBottom: "4px",
             }}
           >
-            Courier Admin
+            Deb Air Express
           </h1>
           <p style={{ color: "var(--text-secondary)", fontSize: "14px" }}>
             Sign in to manage your courier operations

@@ -63,12 +63,10 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       {/* Mobile Header */}
       <header className="lg:hidden h-16 bg-[var(--bg-secondary)] border-b border-[var(--border-color)] flex items-center justify-between px-4 sticky top-0 z-[60]">
         <div className="flex items-center gap-3">
-          <div className="w-8 h-8 bg-gradient-to-br from-indigo-500 to-purple-500 rounded-lg flex items-center justify-center">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2">
-              <rect x="1" y="3" width="15" height="13" rx="2" /><path d="M16 8h4l3 3v5h-7V8z" /><circle cx="5.5" cy="18.5" r="2.5" /><circle cx="18.5" cy="18.5" r="2.5" />
-            </svg>
+          <div className="w-10 h-10 bg-white rounded-lg flex items-center justify-center p-1 shadow-sm">
+            <img src="/logo.webp" alt="Logo" className="w-full h-full object-contain" />
           </div>
-          <span className="font-bold text-sm text-[var(--text-primary)]">Courier Admin</span>
+          <span className="font-extrabold text-[15px] text-[var(--text-primary)] tracking-tight">Deb Air Express</span>
         </div>
         <button 
           onClick={toggleSidebar}
@@ -95,15 +93,13 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}
       `}>
         {/* Brand (Desktop only) */}
-        <div className="hidden lg:flex items-center gap-3 p-6 border-b border-[var(--border-color)]">
-          <div className="w-9 h-9 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg shadow-indigo-500/20">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2">
-              <rect x="1" y="3" width="15" height="13" rx="2" /><path d="M16 8h4l3 3v5h-7V8z" /><circle cx="5.5" cy="18.5" r="2.5" /><circle cx="18.5" cy="18.5" r="2.5" />
-            </svg>
+        <div className="hidden lg:flex items-center gap-3 p-5 border-b border-[var(--border-color)]">
+          <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center p-1.5 shadow-lg">
+            <img src="/logo.webp" alt="Logo" className="w-full h-full object-contain" />
           </div>
           <div>
-            <div className="font-bold text-[15px] text-[var(--text-primary)] leading-none mb-1">Courier Admin</div>
-            <div className="text-[11px] text-[var(--text-muted)]">Management Panel</div>
+            <div className="font-extrabold text-[16px] text-[var(--text-primary)] leading-tight tracking-tight">Deb Air Express</div>
+            <div className="text-[10px] text-[var(--text-muted)] font-bold tracking-widest uppercase opacity-70">Admin panel</div>
           </div>
         </div>
 
@@ -156,10 +152,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       {/* Main Content */}
       <main className="lg:ml-64 flex flex-col min-h-screen">
         {/* Header bar (Desktop only) */}
-        <div className="hidden lg:flex h-16 items-center justify-between px-8 bg-[var(--bg-secondary)] border-b border-[var(--border-color)] sticky top-0 z-40 backdrop-blur-md bg-opacity-80">
-          <div className="text-xs text-[var(--text-muted)] font-medium">
-            {new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
-          </div>
+        <div className="hidden lg:flex h-16 items-center justify-end px-8 bg-[var(--bg-secondary)] border-b border-[var(--border-color)] sticky top-0 z-40 backdrop-blur-md bg-opacity-80">
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20">
               <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_8px_rgba(16,185,129,0.6)]" />
