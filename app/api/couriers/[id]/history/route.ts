@@ -15,18 +15,12 @@ export async function GET(
       [id]
     );
     
-    return NextResponse.json(rows, {
-      headers: {
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
-        'Access-Control-Allow-Headers': 'Content-Type',
-      }
-    });
+    return NextResponse.json(rows);
   } catch (error) {
     console.error('Error fetching history:', error);
     return NextResponse.json(
       { error: 'Failed to fetch history' }, 
-      { status: 500, headers: { 'Access-Control-Allow-Origin': '*' } }
+      { status: 500 }
     );
   }
 }

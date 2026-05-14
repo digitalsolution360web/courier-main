@@ -10,11 +10,9 @@ export async function GET(
     
     const [rows] = await pool.query(
       `SELECT c.*, 
-              s.full_name as sender_name,
-              r.full_name as receiver_name
+              s.full_name as sender_name
        FROM couriers c
        LEFT JOIN customers s ON c.sender_id = s.customer_id
-       LEFT JOIN customers r ON c.receiver_id = r.customer_id
        WHERE c.courier_id = ?`,
       [id]
     );

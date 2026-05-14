@@ -16,7 +16,7 @@ interface CourierDetails {
   courier_id: number;
   tracking_number: string;
   sender_name: string;
-  receiver_name: string;
+  receiver: string;
   origin: string;
   destination: string;
   current_status: string;
@@ -188,7 +188,7 @@ export default function CourierHistory() {
           </div>
           <div className="bg-[var(--bg-secondary)] p-4 rounded-xl border border-[var(--border-color)]">
             <p className="text-[var(--text-muted)] text-xs font-bold uppercase tracking-widest mb-1">Receiver Details</p>
-            <p className="text-lg font-semibold text-[var(--text-primary)]">{courier.receiver_name || 'Not Available'}</p>
+            <p className="text-lg font-semibold text-[var(--text-primary)]">{courier.receiver || 'Not Available'}</p>
           </div>
         </div>
       </div>

@@ -11,11 +11,9 @@ export async function GET(req: NextRequest) {
     
     let query = `
       SELECT c.*, 
-             s.full_name as sender_name,
-             r.full_name as receiver_name
+             s.full_name as sender_name
       FROM couriers c
       LEFT JOIN customers s ON c.sender_id = s.customer_id
-      LEFT JOIN customers r ON c.receiver_id = r.customer_id
     `;
     let countQuery = 'SELECT COUNT(*) as total FROM couriers';
     const params: any[] = [];
@@ -46,13 +44,13 @@ export async function GET(req: NextRequest) {
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { tracking_number, sender_id, receiver_id, origin, destination, package_weight, expected_delivery } = body;
+    const { tracking_number, sender_id, receiver, origin, destination, package_weight, expected_delivery } = body;
     
     const [result] = await pool.query(
       `INSERT INTO couriers 
-       (tracking_number, sender_id, receiver_id, origin, destination, package_weight, expected_delivery) 
+       (tracking_number, sender_id, receiver, origin, destination, package_weight, expected_delivery) 
        VALUES (?, ?, ?, ?, ?, ?, ?)`,
-      [tracking_number, sender_id, receiver_id, origin, destination, package_weight, expected_delivery]
+      [tracking_number, sender_id, receiver, origin, destination, package_weight, expected_delivery]
     );
     
     return NextResponse.json({ success: true, id: (result as any).insertId });

@@ -6,8 +6,9 @@ import Link from 'next/link';
 interface Courier {
   courier_id: number;
   tracking_number: string;
+  sender_id?: number;
   sender_name?: string;
-  receiver_name?: string;
+  receiver?: string;
   origin: string;
   destination: string;
   package_weight: number;
@@ -53,7 +54,7 @@ export default function CouriersPage() {
   const [editingCourier, setEditingCourier] = useState<Courier | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [formData, setFormData]     = useState({
-    tracking_number: '', sender_id: '', receiver_id: '',
+    tracking_number: '', sender_id: '', receiver: '',
     origin: '', destination: '', package_weight: '',
     expected_delivery: '', current_status: 'Booked'
   });
@@ -89,7 +90,7 @@ export default function CouriersPage() {
     if (c) {
       setEditingCourier(c);
       setFormData({
-        tracking_number: c.tracking_number, sender_id: '', receiver_id: '',
+        tracking_number: c.tracking_number, sender_id: c.sender_id?.toString() || '', receiver: c.receiver || '',
         origin: c.origin || '', destination: c.destination || '',
         package_weight: c.package_weight?.toString() || '',
         expected_delivery: c.expected_delivery ? new Date(c.expected_delivery).toISOString().split('T')[0] : '',
@@ -97,7 +98,7 @@ export default function CouriersPage() {
       });
     } else {
       setEditingCourier(null);
-      setFormData({ tracking_number: `TRK${Date.now().toString().slice(-8)}`, sender_id: '', receiver_id: '', origin: '', destination: '', package_weight: '', expected_delivery: '', current_status: 'Booked' });
+      setFormData({ tracking_number: `TRK${Date.now().toString().slice(-8)}`, sender_id: '', receiver: '', origin: '', destination: '', package_weight: '', expected_delivery: '', current_status: 'Booked' });
     }
     setShowModal(true);
   };
@@ -192,7 +193,7 @@ export default function CouriersPage() {
                     </td>
                     <td className="px-5 py-4">
                       <div className="text-xs text-[var(--text-primary)]"><strong>S:</strong> {c.sender_name || '—'}</div>
-                      <div className="text-xs text-[var(--text-primary)] mt-0.5"><strong>R:</strong> {c.receiver_name || '—'}</div>
+                      <div className="text-xs text-[var(--text-primary)] mt-0.5"><strong>R:</strong> {c.receiver || '—'}</div>
                     </td>
                     <td className="px-5 py-4 text-sm text-[var(--text-secondary)]">{c.package_weight} KG</td>
                     <td className="px-5 py-4"><StatusBadge status={c.current_status} /></td>
@@ -245,7 +246,7 @@ export default function CouriersPage() {
               {/* Details */}
               <div className="grid grid-cols-2 gap-2 text-xs text-[var(--text-secondary)] mb-3">
                 <div><span className="font-bold text-[var(--text-muted)]">Sender:</span> {c.sender_name || '—'}</div>
-                <div><span className="font-bold text-[var(--text-muted)]">Receiver:</span> {c.receiver_name || '—'}</div>
+                <div><span className="font-bold text-[var(--text-muted)]">Receiver:</span> {c.receiver || '—'}</div>
                 <div><span className="font-bold text-[var(--text-muted)]">Weight:</span> {c.package_weight} KG</div>
                 <div><span className="font-bold text-[var(--text-muted)]">ETA:</span> <span suppressHydrationWarning>{c.expected_delivery ? new Date(c.expected_delivery).toLocaleDateString() : '—'}</span></div>
               </div>
@@ -315,20 +316,18 @@ export default function CouriersPage() {
 
                   <div className="col-span-1">
                     <label className="block text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-wider mb-1">Sender</label>
-                    <select required value={formData.sender_id} onChange={e => setFormData(f => ({ ...f, sender_id: e.target.value }))}
+                    <select required value={String(formData.sender_id)} onChange={e => setFormData(f => ({ ...f, sender_id: e.target.value }))}
                       className="w-full bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-xl py-2 px-3 text-[var(--text-primary)] text-xs outline-none">
                       <option value="">Select...</option>
-                      {customers.map(cu => <option key={cu.customer_id} value={cu.customer_id}>{cu.full_name}</option>)}
+                      {customers.map(cu => <option key={cu.customer_id} value={String(cu.customer_id)}>{cu.full_name}</option>)}
                     </select>
                   </div>
 
                   <div className="col-span-1">
                     <label className="block text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-wider mb-1">Receiver</label>
-                    <select required value={formData.receiver_id} onChange={e => setFormData(f => ({ ...f, receiver_id: e.target.value }))}
-                      className="w-full bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-xl py-2 px-3 text-[var(--text-primary)] text-xs outline-none">
-                      <option value="">Select...</option>
-                      {customers.map(cu => <option key={cu.customer_id} value={cu.customer_id}>{cu.full_name}</option>)}
-                    </select>
+                    <input type="text" required placeholder="Receiver" value={formData.receiver} onChange={e => setFormData(f => ({ ...f, receiver: e.target.value }))}
+                      className="w-full bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-xl py-2 px-3 text-[var(--text-primary)] text-xs outline-none"
+                    />
                   </div>
 
                   <div className="col-span-1">
@@ -360,7 +359,7 @@ export default function CouriersPage() {
                     />
                   </div>
 
-                  <div className="col-span-2">
+                  {/* <div className="col-span-2">
                     <label className="block text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-wider mb-2">Status Milestone</label>
                     <div className="grid grid-cols-3 gap-1.5">
                       {statusOptions.map(s => (
@@ -370,7 +369,7 @@ export default function CouriersPage() {
                         </button>
                       ))}
                     </div>
-                  </div>
+                  </div> */}
                 </div>
               </div>
 
