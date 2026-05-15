@@ -44,18 +44,36 @@ export async function GET(req: NextRequest) {
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { tracking_number, sender_id, receiver, origin, destination, package_weight, expected_delivery } = body;
+    const { tracking_number, courier_type, sender_id, receiver, origin, destination, package_weight, quantity, expected_delivery } = body;
     
     const [result] = await pool.query(
       `INSERT INTO couriers 
-       (tracking_number, sender_id, receiver, origin, destination, package_weight, expected_delivery) 
-       VALUES (?, ?, ?, ?, ?, ?, ?)`,
-      [tracking_number, sender_id, receiver, origin, destination, package_weight, expected_delivery]
+       (tracking_number, courier_type, sender_id, receiver, origin, destination, package_weight, quantity, expected_delivery) 
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      [tracking_number, courier_type, sender_id, receiver, origin, destination, package_weight, quantity, expected_delivery]
     );
+     // Get inserted courier ID
+  const courier_id = (result as any).insertId;
+
+  // Insert status history
+  await pool.query(
+  `INSERT INTO courier_status_history
+  (courier_id, status, location, updated_at)
+  VALUES (?, ?, ?, NOW())`,
+  [courier_id, "Booked", origin]
+);
     
     return NextResponse.json({ success: true, id: (result as any).insertId });
   } catch (error) {
-    return NextResponse.json({ error: 'Failed to create courier' }, { status: 500 });
+    return NextResponse.json(
+       {
+        success: false,
+        message: error.message,
+        code: error.code,
+        sqlMessage: error.sqlMessage
+      },
+      { status: 500 }
+    );
   }
 }
 
@@ -80,12 +98,12 @@ export async function PUT(req: NextRequest) {
     await pool.query(`UPDATE couriers SET ${fields.join(', ')} WHERE courier_id = ?`, values);
     
     // Add status history
-    if (current_status) {
-      await pool.query(
-        'INSERT INTO courier_status_history (courier_id, status, updated_at) VALUES (?, ?, NOW())',
-        [courier_id, current_status]
-      );
-    }
+    // if (current_status) {
+    //   await pool.query(
+    //     'INSERT INTO courier_status_history (courier_id, status, updated_at) VALUES (?, ?, NOW())',
+    //     [courier_id, current_status]
+    //   );
+    // }
     
     return NextResponse.json({ success: true });
   } catch (error) {

@@ -91,7 +91,7 @@ export default function CustomersPage() {
   };
 
   const handleDelete = async (id: number) => {
-    if (confirm('Are you sure you want to delete this customer?')) {
+    if (confirm('Are you sure you want to delete this sender?')) {
       const res = await fetch(`/api/customers?id=${id}`, { method: 'DELETE' });
       if (res.ok) fetchCustomers();
     }
@@ -103,22 +103,22 @@ export default function CustomersPage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-6">
         <div>
-          <h1 className="text-2xl md:text-3xl font-bold text-[var(--text-primary)] tracking-tight">Customers</h1>
-          <p className="text-[var(--text-secondary)] text-sm mt-1">Manage your customer database and records.</p>
+          <h1 className="text-2xl md:text-3xl font-bold text-[var(--text-primary)] tracking-tight">Senders</h1>
+          <p className="text-[var(--text-secondary)] text-sm mt-1">Manage your sender database and records.</p>
         </div>
         <button
           onClick={() => openModal()}
           className="btn-primary flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold text-white w-full sm:w-auto"
         >
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" /></svg>
-          Add Customer
+          Add Sender
         </button>
       </div>
 
       {error && (
         <div className="mb-4 p-3 bg-[rgba(244,63,94,0.1)] border border-[rgba(244,63,94,0.2)] rounded-xl flex items-center gap-2 text-[var(--accent-rose)] text-xs animate-fade-in">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="12" /><line x1="12" y1="16" x2="12.01" y2="16" /></svg>
-          Database Connection Error: Failed to retrieve customer records.
+          Database Connection Error: Failed to retrieve sender records.
         </div>
       )}
 
@@ -140,9 +140,11 @@ export default function CustomersPage() {
             <thead>
               <tr className="bg-[var(--bg-primary)] text-left text-xs font-bold text-[var(--text-muted)] uppercase tracking-wider">
                 <th className="px-5 py-4 border-b border-[var(--border-color)]">ID</th>
-                <th className="px-5 py-4 border-b border-[var(--border-color)]">Customer Name</th>
-                <th className="px-5 py-4 border-b border-[var(--border-color)]">Contact Info</th>
+                <th className="px-5 py-4 border-b border-[var(--border-color)]">Sender</th>
+                <th className="px-5 py-4 border-b border-[var(--border-color)]">Phone</th>
+                <th className="px-5 py-4 border-b border-[var(--border-color)]">Email</th>
                 <th className="px-5 py-4 border-b border-[var(--border-color)]">Address</th>
+                <th className="px-5 py-4 border-b border-[var(--border-color)]">Date</th>
                 <th className="px-5 py-4 border-b border-[var(--border-color)] text-right">Actions</th>
               </tr>
             </thead>
@@ -158,20 +160,26 @@ export default function CustomersPage() {
                   </tr>
                 ))
               ) : customers.length === 0 ? (
-                <tr><td colSpan={5} className="px-6 py-16 text-center text-[var(--text-secondary)]">No customers found.</td></tr>
+                <tr><td colSpan={5} className="px-6 py-16 text-center text-[var(--text-secondary)]">No senders found.</td></tr>
               ) : (
                 customers.map((customer) => (
                   <tr key={customer.customer_id} className="table-row group">
                     <td className="px-5 py-4 text-xs text-[var(--text-muted)] font-mono">#{customer.customer_id}</td>
                     <td className="px-5 py-4">
                       <div className="font-semibold text-[var(--text-primary)] text-sm">{customer.full_name}</div>
-                      <div className="text-xs text-[var(--text-muted)]" suppressHydrationWarning>Joined {new Date(customer.created_at).toLocaleDateString()}</div>
+                      
+                    </td>
+                    <td className="px-5 py-4">
+                      <div className="text-xs text-[var(--text-muted)]">{customer.phone || 'N/A'}</div>
                     </td>
                     <td className="px-5 py-4">
                       <div className="text-sm text-[var(--text-secondary)]">{customer.email || 'N/A'}</div>
-                      <div className="text-xs text-[var(--text-muted)]">{customer.phone || 'N/A'}</div>
                     </td>
                     <td className="px-5 py-4 text-sm text-[var(--text-secondary)] max-w-xs truncate">{customer.address || '—'}</td>
+                    <td className="px-5 py-4">
+              
+                      <div className="text-xs text-[var(--text-muted)]" suppressHydrationWarning>Joined {new Date(customer.created_at).toLocaleDateString("en-GB")}</div>
+                    </td>
                     <td className="px-5 py-4 text-right">
                       <div className="flex justify-end gap-2">
                         <button onClick={() => openModal(customer)} className="p-2 text-[var(--accent-sky)] hover:bg-[rgba(14,165,233,0.1)] rounded-lg transition-colors">
@@ -201,7 +209,7 @@ export default function CustomersPage() {
             </div>
           ))
         ) : customers.length === 0 ? (
-          <div className="text-center py-12 text-[var(--text-secondary)] text-sm">No customers found.</div>
+          <div className="text-center py-12 text-[var(--text-secondary)] text-sm">No senders found.</div>
         ) : (
           customers.map((customer) => (
             <div key={customer.customer_id} className="bg-[var(--bg-card)] border border-[var(--border-color)] rounded-xl p-4">
@@ -211,7 +219,7 @@ export default function CustomersPage() {
                     <span className="text-[10px] font-mono text-[var(--text-muted)] bg-[var(--bg-secondary)] px-1.5 py-0.5 rounded">#{customer.customer_id}</span>
                   </div>
                   <h3 className="font-bold text-[var(--text-primary)] text-sm truncate">{customer.full_name}</h3>
-                  <p className="text-xs text-[var(--text-muted)] mt-0.5" suppressHydrationWarning>Joined {new Date(customer.created_at).toLocaleDateString()}</p>
+                  <p className="text-xs text-[var(--text-muted)] mt-0.5" suppressHydrationWarning>Joined {new Date(customer.created_at).toLocaleDateString("en-GB")}</p>
                 </div>
                 <div className="flex gap-1.5 ml-2">
                   <button onClick={() => openModal(customer)} className="p-2 text-[var(--accent-sky)] hover:bg-[rgba(14,165,233,0.1)] rounded-lg transition-colors">
@@ -274,7 +282,7 @@ export default function CustomersPage() {
           <div className="bg-[var(--bg-card)] border border-[var(--border-color)] rounded-3xl w-full max-w-md shadow-[0_0_50px_rgba(0,0,0,0.5)] animate-modal-in overflow-hidden my-auto">
             <div className="flex items-center justify-between p-5 md:p-6 border-b border-[var(--border-color)] bg-[var(--bg-primary)]/50 sticky top-0 z-10 backdrop-blur-md">
               <h2 className="text-lg md:text-xl font-extrabold text-[var(--text-primary)] tracking-tight">
-                {editingCustomer ? 'Update Profile' : 'Create Customer'}
+                {editingCustomer ? 'Update Profile' : 'Create Sender'}
               </h2>
               <button onClick={closeModal} className="text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-colors p-2 hover:bg-[var(--bg-secondary)] rounded-full">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" /></svg>
@@ -302,7 +310,7 @@ export default function CustomersPage() {
                       value={formData.phone}
                       onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                       className="w-full bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-xl py-2 md:py-3 px-4 text-[var(--text-primary)] text-sm focus:border-[var(--accent-primary)] outline-none transition-all"
-                      placeholder="+1..."
+                      placeholder="Enter Phone"
                     />
                   </div>
                   <div>
@@ -341,7 +349,7 @@ export default function CustomersPage() {
                   type="submit"
                   className="flex-[1.5] px-4 py-2.5 md:py-3 text-sm font-bold text-white btn-primary rounded-xl order-1 sm:order-2 shadow-lg shadow-indigo-500/20"
                 >
-                  {editingCustomer ? 'Update Profile' : 'Save Customer'}
+                  {editingCustomer ? 'Update Profile' : 'Save Sender'}
                 </button>
               </div>
             </form>

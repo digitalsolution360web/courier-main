@@ -6,12 +6,14 @@ import Link from 'next/link';
 interface Courier {
   courier_id: number;
   tracking_number: string;
+  courier_type?: string;
   sender_id?: number;
   sender_name?: string;
   receiver?: string;
   origin: string;
   destination: string;
   package_weight: number;
+  quantity: number;
   shipment_date: string;
   expected_delivery: string;
   current_status: string;
@@ -54,8 +56,8 @@ export default function CouriersPage() {
   const [editingCourier, setEditingCourier] = useState<Courier | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [formData, setFormData]     = useState({
-    tracking_number: '', sender_id: '', receiver: '',
-    origin: '', destination: '', package_weight: '',
+    tracking_number: '', courier_type: '', sender_id: '', receiver: '',
+    origin: '', destination: '', package_weight: '', quantity: '',
     expected_delivery: '', current_status: 'Booked'
   });
 
@@ -90,15 +92,16 @@ export default function CouriersPage() {
     if (c) {
       setEditingCourier(c);
       setFormData({
-        tracking_number: c.tracking_number, sender_id: c.sender_id?.toString() || '', receiver: c.receiver || '',
+        tracking_number: c.tracking_number,  courier_type: c.courier_type || '',sender_id: c.sender_id?.toString() || '', receiver: c.receiver || '',
         origin: c.origin || '', destination: c.destination || '',
         package_weight: c.package_weight?.toString() || '',
+        quantity: c.quantity?.toString() || '',
         expected_delivery: c.expected_delivery ? new Date(c.expected_delivery).toISOString().split('T')[0] : '',
         current_status: c.current_status,
       });
     } else {
       setEditingCourier(null);
-      setFormData({ tracking_number: `TRK${Date.now().toString().slice(-8)}`, sender_id: '', receiver: '', origin: '', destination: '', package_weight: '', expected_delivery: '', current_status: 'Booked' });
+      setFormData({ tracking_number: '', courier_type: '', sender_id: '', receiver: '', origin: '', destination: '', package_weight: '', quantity: '', expected_delivery: '', current_status: 'Booked' });
     }
     setShowModal(true);
   };
@@ -165,7 +168,7 @@ export default function CouriersPage() {
           <table className="w-full border-collapse" style={{ minWidth: '700px' }}>
             <thead>
               <tr className="bg-[var(--bg-primary)] border-b border-[var(--border-color)]">
-                {['Tracking', 'Route', 'Parties', 'Weight', 'Status', 'Actions'].map(h => (
+                {['Id', 'LR No.','Type','Sender', 'Receiver', 'Origin', 'Destination', 'Weight', 'Item/Quantity','Date', 'Shipment Status', 'Actions'].map(h => (
                   <th key={h} className="px-5 py-4 text-left text-[11px] font-extrabold text-[var(--text-muted)] uppercase tracking-wider">{h}</th>
                 ))}
               </tr>
@@ -185,17 +188,41 @@ export default function CouriersPage() {
                 couriers.map((c) => (
                   <tr key={c.courier_id} className="border-b border-[var(--border-color)] last:border-0 hover:bg-[var(--bg-card-hover)] transition-colors">
                     <td className="px-5 py-4">
+                      <span className="font-mono text-sm font-bold text-[var(--accent-primary)]">#{c.courier_id}</span>
+                    </td>
+                    <td className="px-5 py-4">
                       <span className="font-mono text-sm font-bold text-[var(--accent-primary)]">{c.tracking_number}</span>
                     </td>
                     <td className="px-5 py-4">
-                      <div className="text-sm font-semibold text-[var(--text-primary)]">{c.origin} → {c.destination}</div>
-                      <div className="text-[11px] text-[var(--text-muted)] mt-0.5" suppressHydrationWarning>{c.shipment_date ? new Date(c.shipment_date).toLocaleDateString() : 'Pending'}</div>
+                      <span className="font-mono text-sm font-bold text-[var(--accent-primary)]">{c.courier_type}</span>
                     </td>
                     <td className="px-5 py-4">
-                      <div className="text-xs text-[var(--text-primary)]"><strong>S:</strong> {c.sender_name || '—'}</div>
-                      <div className="text-xs text-[var(--text-primary)] mt-0.5"><strong>R:</strong> {c.receiver || '—'}</div>
+                      <div className="text-xs text-[var(--text-primary)]">{c.sender_name}</div>
                     </td>
-                    <td className="px-5 py-4 text-sm text-[var(--text-secondary)]">{c.package_weight} KG</td>
+                    <td className="px-5 py-4">
+                      <div className="text-xs text-[var(--text-primary)]">{c.receiver}</div>
+                    </td>
+                    <td className="px-5 py-4">
+                      <div className="text-sm font-semibold text-[var(--text-primary)]">{c.origin}</div>
+                      
+                    </td>
+                    <td className="px-5 py-4">
+                      <div className="text-sm font-semibold text-[var(--text-primary)]">{c.destination}</div>
+                      
+                    </td>
+                    <td className="px-5 py-4">
+                      <div className="text-sm font-semibold text-[var(--text-primary)]">{c.package_weight} KG</div>
+                      
+                    </td>
+                    <td className="px-5 py-4">
+                      <div className="text-sm font-semibold text-[var(--text-primary)]">{c.quantity}</div>
+                      
+                    </td>
+                    
+                    <td className="px-5 py-4 text-sm text-[var(--text-secondary)]">
+                      <div className="text-[11px] text-[var(--text-primary)] mt-0.5" suppressHydrationWarning>{c.shipment_date ? new Date(c.shipment_date).toLocaleDateString("en-GB") : 'Pending'}</div>
+                      
+                      </td>
                     <td className="px-5 py-4"><StatusBadge status={c.current_status} /></td>
                     <td className="px-5 py-4">
                       <div className="flex gap-1.5">
@@ -234,7 +261,7 @@ export default function CouriersPage() {
               <div className="flex justify-between items-start mb-3">
                 <div>
                   <span className="font-mono text-sm font-bold text-[var(--accent-primary)]">{c.tracking_number}</span>
-                  <div className="text-[11px] text-[var(--text-muted)] mt-0.5">{c.shipment_date ? new Date(c.shipment_date).toLocaleDateString() : 'Pending'}</div>
+                  <div className="text-[11px] text-[var(--text-muted)] mt-0.5">{c.shipment_date ? new Date(c.shipment_date).toLocaleDateString("en-GB") : 'Pending'}</div>
                 </div>
                 <StatusBadge status={c.current_status} />
               </div>
@@ -248,7 +275,7 @@ export default function CouriersPage() {
                 <div><span className="font-bold text-[var(--text-muted)]">Sender:</span> {c.sender_name || '—'}</div>
                 <div><span className="font-bold text-[var(--text-muted)]">Receiver:</span> {c.receiver || '—'}</div>
                 <div><span className="font-bold text-[var(--text-muted)]">Weight:</span> {c.package_weight} KG</div>
-                <div><span className="font-bold text-[var(--text-muted)]">ETA:</span> <span suppressHydrationWarning>{c.expected_delivery ? new Date(c.expected_delivery).toLocaleDateString() : '—'}</span></div>
+                <div><span className="font-bold text-[var(--text-muted)]">ETA:</span> <span suppressHydrationWarning>{c.expected_delivery ? new Date(c.expected_delivery).toLocaleDateString("en-GB") : '—'}</span></div>
               </div>
               {/* Actions */}
               <div className="flex gap-2 pt-3 border-t border-[var(--border-color)]">
@@ -307,11 +334,19 @@ export default function CouriersPage() {
             <form onSubmit={handleSubmit} className="flex flex-col max-h-[90vh]">
               <div className="flex-1 overflow-y-auto p-4 md:p-7 custom-scrollbar">
                 <div className="grid grid-cols-2 gap-3 md:gap-4">
-                  <div className="col-span-2">
-                    <label className="block text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-wider mb-1">Tracking Number</label>
-                    <input type="text" required value={formData.tracking_number} onChange={e => setFormData(f => ({ ...f, tracking_number: e.target.value }))}
-                      className="w-full bg-[var(--bg-primary)] border border-[var(--border-color)] rounded-xl py-2 px-4 text-[var(--accent-primary)] text-sm font-mono font-bold outline-none"
+                  <div className="col-span-1">
+                    <label className="block text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-wider mb-1">LR No.</label>
+                    <input type="text" required placeholder="LR No." value={formData.tracking_number} onChange={e => setFormData(f => ({ ...f, tracking_number: e.target.value }))}
+                      className="w-full bg-[var(--bg-primary)] border border-[var(--border-color)] rounded-xl py-2 px-4 text-[var(--text-primary)] text-sm font-mono font-bold outline-none"
                     />
+                  </div>
+                  <div className="col-span-1">
+                    <label className="block text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-wider mb-1">Courier Type</label>
+                    <select required value={String(formData.courier_type)} onChange={e => setFormData(f => ({ ...f, courier_type: e.target.value }))}
+                      className="w-full bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-xl py-2 px-3 text-[var(--text-primary)] text-xs outline-none">
+                      <option value="">Select...</option>
+                      {['Consignment','Forwarded Details'].map(cu => <option key={cu} value={String(cu)}>{cu}</option>)}
+                    </select>
                   </div>
 
                   <div className="col-span-1">
@@ -346,7 +381,13 @@ export default function CouriersPage() {
 
                   <div className="col-span-1">
                     <label className="block text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-wider mb-1">Weight (KG)</label>
-                    <input type="number" step="0.01" required value={formData.package_weight} onChange={e => setFormData(f => ({ ...f, package_weight: e.target.value }))}
+                    <input type="number" step="0.01" required value={formData.package_weight} onChange={e => setFormData(f => ({ ...f, package_weight: e.target.value }))} placeholder="0.01"
+                      className="w-full bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-xl py-2 px-3 text-[var(--text-primary)] text-xs outline-none"
+                    />
+                  </div>
+                  <div className="col-span-1">
+                    <label className="block text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-wider mb-1">Quantity</label>
+                    <input type="number" required value={formData.quantity} onChange={e => setFormData(f => ({ ...f, quantity: e.target.value }))} placeholder="1"
                       className="w-full bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-xl py-2 px-3 text-[var(--text-primary)] text-xs outline-none"
                     />
                   </div>

@@ -19,7 +19,7 @@ const navItems = [
   },
   {
     href: '/dashboard/customers',
-    label: 'Customers',
+    label: 'Senders',
     icon: (
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
         <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
@@ -163,7 +163,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
         {/* Content Wrapper */}
         <div className="flex-1 p-4 md:p-6 lg:p-8">
-          <div className="max-w-7xl mx-auto">
+          <div className="max-w-9xl mx-auto">
             {children}
           </div>
         </div>
