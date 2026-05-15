@@ -66,12 +66,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ success: true, id: (result as any).insertId });
   } catch (error) {
     return NextResponse.json(
-       {
-        success: false,
-        message: error.message,
-        code: error.code,
-        sqlMessage: error.sqlMessage
-      },
+      { error: 'data not inserted' },
       { status: 500 }
     );
   }
