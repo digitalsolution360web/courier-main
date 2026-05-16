@@ -7,6 +7,7 @@ interface Courier {
   courier_id: number;
   tracking_number: string;
   courier_type?: string;
+  forwarded_details_code?: string;
   sender_id?: number;
   sender_name?: string;
   receiver?: string;
@@ -56,8 +57,8 @@ export default function CouriersPage() {
   const [editingCourier, setEditingCourier] = useState<Courier | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [formData, setFormData]     = useState({
-    tracking_number: '', courier_type: '', sender_id: '', receiver: '',
-    origin: '', destination: '', package_weight: '', quantity: '',
+    tracking_number: '', courier_type: '',  forwarded_details_code: '', sender_id: '', receiver: '',
+    origin: '', destination: '', package_weight: '', quantity: '', shipment_date: '',
     expected_delivery: '', current_status: 'Booked'
   });
 
@@ -92,16 +93,17 @@ export default function CouriersPage() {
     if (c) {
       setEditingCourier(c);
       setFormData({
-        tracking_number: c.tracking_number,  courier_type: c.courier_type || '',sender_id: c.sender_id?.toString() || '', receiver: c.receiver || '',
+        tracking_number: c.tracking_number,  courier_type: c.courier_type || '', forwarded_details_code: c.forwarded_details_code || '', sender_id: c.sender_id?.toString() || '', receiver: c.receiver || '',
         origin: c.origin || '', destination: c.destination || '',
         package_weight: c.package_weight?.toString() || '',
         quantity: c.quantity?.toString() || '',
+        shipment_date: c.shipment_date ? new Date(c.shipment_date).toISOString().split('T')[0] : '',
         expected_delivery: c.expected_delivery ? new Date(c.expected_delivery).toISOString().split('T')[0] : '',
         current_status: c.current_status,
       });
     } else {
       setEditingCourier(null);
-      setFormData({ tracking_number: '', courier_type: '', sender_id: '', receiver: '', origin: '', destination: '', package_weight: '', quantity: '', expected_delivery: '', current_status: 'Booked' });
+      setFormData({ tracking_number: '', courier_type: '',  forwarded_details_code:'', sender_id: '', receiver: '', origin: '', destination: '', package_weight: '', quantity: '', shipment_date: '', expected_delivery: '', current_status: 'Booked' });
     }
     setShowModal(true);
   };
@@ -195,6 +197,13 @@ export default function CouriersPage() {
                     </td>
                     <td className="px-5 py-4">
                       <span className="font-mono text-sm font-bold text-[var(--accent-primary)]">{c.courier_type}</span>
+                      {c.forwarded_details_code && (
+                        <>
+                        <br /><span className="text-[10px] text-[var(--text-primary)] font-medium mt-1">
+                          Code: {c.forwarded_details_code}
+                        </span>
+                        </>
+                      )}
                     </td>
                     <td className="px-5 py-4">
                       <div className="text-xs text-[var(--text-primary)]">{c.sender_name}</div>
@@ -348,6 +357,27 @@ export default function CouriersPage() {
                       {['Consignment','Forwarded Details'].map(cu => <option key={cu} value={String(cu)}>{cu}</option>)}
                     </select>
                   </div>
+                  {formData.courier_type === 'Forwarded Details' && (
+                    <div className="col-span-2">
+                      <label className="block text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-wider mb-1">
+                        Forwarded Details Code
+                      </label>
+
+                      <input
+                        type="text"
+                        required
+                        placeholder="Enter forwarded details code"
+                        value={formData.forwarded_details_code}
+                        onChange={e =>
+                          setFormData(f => ({
+                            ...f,
+                            forwarded_details_code: e.target.value
+                          }))
+                        }
+                        className="w-full bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-xl py-2 px-3 text-[var(--text-primary)] text-xs outline-none"
+                      />
+                    </div>
+                  )}
 
                   <div className="col-span-1">
                     <label className="block text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-wider mb-1">Sender</label>
@@ -391,7 +421,13 @@ export default function CouriersPage() {
                       className="w-full bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-xl py-2 px-3 text-[var(--text-primary)] text-xs outline-none"
                     />
                   </div>
-
+                  <div className="col-span-1">
+                    <label className="block text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-wider mb-1">Shipment Date</label>
+                    <input type="date" required value={formData.shipment_date} onChange={e => setFormData(f => ({ ...f, shipment_date: e.target.value }))}
+                      className="w-full bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-xl py-2 px-3 text-[var(--text-primary)] text-xs outline-none"
+                      style={{ colorScheme: 'dark' }}
+                    />
+                  </div>
                   <div className="col-span-1">
                     <label className="block text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-wider mb-1">Delivery Date</label>
                     <input type="date" required value={formData.expected_delivery} onChange={e => setFormData(f => ({ ...f, expected_delivery: e.target.value }))}

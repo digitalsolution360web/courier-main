@@ -44,13 +44,22 @@ export async function GET(req: NextRequest) {
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { tracking_number, courier_type, sender_id, receiver, origin, destination, package_weight, quantity, expected_delivery } = body;
+    let { tracking_number, courier_type, forwarded_details_code, sender_id, receiver, origin, destination, package_weight, quantity, shipment_date, expected_delivery } = body;
+
+    // Current time
+    const now = new Date();
+
+    // Extract current HH:mm:ss
+    const timePart = now.toTimeString().split(' ')[0];
+
+    // Combine form date + current time
+    shipment_date = `${shipment_date} ${timePart}`;
     
     const [result] = await pool.query(
       `INSERT INTO couriers 
-       (tracking_number, courier_type, sender_id, receiver, origin, destination, package_weight, quantity, expected_delivery) 
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-      [tracking_number, courier_type, sender_id, receiver, origin, destination, package_weight, quantity, expected_delivery]
+       (tracking_number, courier_type, forwarded_details_code, sender_id, receiver, origin, destination, package_weight, quantity, shipment_date, expected_delivery) 
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      [tracking_number, courier_type, forwarded_details_code, sender_id, receiver, origin, destination, package_weight, quantity, shipment_date, expected_delivery]
     );
      // Get inserted courier ID
   const courier_id = (result as any).insertId;
@@ -59,8 +68,8 @@ export async function POST(req: NextRequest) {
   await pool.query(
   `INSERT INTO courier_status_history
   (courier_id, status, location, updated_at)
-  VALUES (?, ?, ?, NOW())`,
-  [courier_id, "Booked", origin]
+  VALUES (?, ?, ?, ?)`,
+  [courier_id, "Booked", origin, shipment_date]
 );
     
     return NextResponse.json({ success: true, id: (result as any).insertId });
@@ -76,7 +85,16 @@ export async function PUT(req: NextRequest) {
   try {
     const body = await req.json();
     const { courier_id, current_status, ...updates } = body;
-    
+    if (updates.courier_type !== 'Forwarded Details') {
+      updates.forwarded_details_code = null;
+    }
+     // Convert shipment_date to DATETIME with current time
+    if (updates.shipment_date) {
+      const now = new Date();
+      const timePart = now.toTimeString().split(' ')[0];
+
+      updates.shipment_date = `${updates.shipment_date} ${timePart}`;
+    }
     const fields = [];
     const values = [];
     
@@ -91,14 +109,6 @@ export async function PUT(req: NextRequest) {
     
     values.push(courier_id);
     await pool.query(`UPDATE couriers SET ${fields.join(', ')} WHERE courier_id = ?`, values);
-    
-    // Add status history
-    // if (current_status) {
-    //   await pool.query(
-    //     'INSERT INTO courier_status_history (courier_id, status, updated_at) VALUES (?, ?, NOW())',
-    //     [courier_id, current_status]
-    //   );
-    // }
     
     return NextResponse.json({ success: true });
   } catch (error) {
