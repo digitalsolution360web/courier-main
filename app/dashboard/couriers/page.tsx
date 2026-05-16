@@ -15,6 +15,7 @@ interface Courier {
   destination: string;
   package_weight: number;
   quantity: number;
+  item_description: string;
   shipment_date: string;
   expected_delivery: string;
   current_status: string;
@@ -58,7 +59,7 @@ export default function CouriersPage() {
   const [submitting, setSubmitting] = useState(false);
   const [formData, setFormData]     = useState({
     tracking_number: '', courier_type: '',  forwarded_details_code: '', sender_id: '', receiver: '',
-    origin: '', destination: '', package_weight: '', quantity: '', shipment_date: '',
+    origin: '', destination: '', package_weight: '', quantity: '', item_description: '', shipment_date: '',
     expected_delivery: '', current_status: 'Booked'
   });
 
@@ -97,13 +98,14 @@ export default function CouriersPage() {
         origin: c.origin || '', destination: c.destination || '',
         package_weight: c.package_weight?.toString() || '',
         quantity: c.quantity?.toString() || '',
+        item_description: c.item_description || '',
         shipment_date: c.shipment_date ? new Date(c.shipment_date).toISOString().split('T')[0] : '',
         expected_delivery: c.expected_delivery ? new Date(c.expected_delivery).toISOString().split('T')[0] : '',
         current_status: c.current_status,
       });
     } else {
       setEditingCourier(null);
-      setFormData({ tracking_number: '', courier_type: '',  forwarded_details_code:'', sender_id: '', receiver: '', origin: '', destination: '', package_weight: '', quantity: '', shipment_date: '', expected_delivery: '', current_status: 'Booked' });
+      setFormData({ tracking_number: '', courier_type: '',  forwarded_details_code:'', sender_id: '', receiver: '', origin: '', destination: '', package_weight: '', quantity: '', item_description: '', shipment_date: '', expected_delivery: '', current_status: 'Booked' });
     }
     setShowModal(true);
   };
@@ -170,7 +172,7 @@ export default function CouriersPage() {
           <table className="w-full border-collapse" style={{ minWidth: '700px' }}>
             <thead>
               <tr className="bg-[var(--bg-primary)] border-b border-[var(--border-color)]">
-                {['Id', 'LR No.','Type','Sender', 'Receiver', 'Origin', 'Destination', 'Weight', 'Item/Quantity','Date', 'Shipment Status', 'Actions'].map(h => (
+                {['Id', 'LR No.','Type','Sender', 'Receiver', 'Origin', 'Destination', 'Weight', 'Item/Quantity', 'Item Details','Date', 'Shipment Status', 'Actions'].map(h => (
                   <th key={h} className="px-5 py-4 text-left text-[11px] font-extrabold text-[var(--text-muted)] uppercase tracking-wider">{h}</th>
                 ))}
               </tr>
@@ -226,6 +228,9 @@ export default function CouriersPage() {
                     <td className="px-5 py-4">
                       <div className="text-sm font-semibold text-[var(--text-primary)]">{c.quantity}</div>
                       
+                    </td>
+                    <td className="px-5 py-4">
+                      <div className="text-sm font-semibold text-[var(--text-primary)]">{c.item_description}</div>
                     </td>
                     
                     <td className="px-5 py-4 text-sm text-[var(--text-secondary)]">
@@ -418,6 +423,12 @@ export default function CouriersPage() {
                   <div className="col-span-1">
                     <label className="block text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-wider mb-1">Quantity</label>
                     <input type="number" required value={formData.quantity} onChange={e => setFormData(f => ({ ...f, quantity: e.target.value }))} placeholder="1"
+                      className="w-full bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-xl py-2 px-3 text-[var(--text-primary)] text-xs outline-none"
+                    />
+                  </div>
+                  <div className="col-span-2">
+                    <label className="block text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-wider mb-1">Item Description</label>
+                    <input type="text" required placeholder="Item Description" value={formData.item_description} onChange={e => setFormData(f => ({ ...f, item_description: e.target.value }))}
                       className="w-full bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-xl py-2 px-3 text-[var(--text-primary)] text-xs outline-none"
                     />
                   </div>

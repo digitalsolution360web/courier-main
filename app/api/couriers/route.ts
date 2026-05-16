@@ -44,7 +44,7 @@ export async function GET(req: NextRequest) {
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    let { tracking_number, courier_type, forwarded_details_code, sender_id, receiver, origin, destination, package_weight, quantity, shipment_date, expected_delivery } = body;
+    let { tracking_number, courier_type, forwarded_details_code, sender_id, receiver, origin, destination, package_weight, quantity, item_description, shipment_date, expected_delivery } = body;
 
     // Current time
     const now = new Date();
@@ -57,9 +57,9 @@ export async function POST(req: NextRequest) {
     
     const [result] = await pool.query(
       `INSERT INTO couriers 
-       (tracking_number, courier_type, forwarded_details_code, sender_id, receiver, origin, destination, package_weight, quantity, shipment_date, expected_delivery) 
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-      [tracking_number, courier_type, forwarded_details_code, sender_id, receiver, origin, destination, package_weight, quantity, shipment_date, expected_delivery]
+       (tracking_number, courier_type, forwarded_details_code, sender_id, receiver, origin, destination, package_weight, quantity, item_description, shipment_date, expected_delivery) 
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      [tracking_number, courier_type, forwarded_details_code, sender_id, receiver, origin, destination, package_weight, quantity, item_description, shipment_date, expected_delivery]
     );
      // Get inserted courier ID
   const courier_id = (result as any).insertId;
