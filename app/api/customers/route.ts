@@ -72,11 +72,39 @@ export async function DELETE(req: NextRequest) {
   try {
     const { searchParams } = new URL(req.url);
     const id = searchParams.get('id');
-    
-    await pool.query('DELETE FROM customers WHERE customer_id = ?', [id]);
-    
+
+    // Get all courier IDs
+    const [rows]: any = await pool.query(
+      'SELECT courier_id FROM couriers WHERE sender_id = ?',
+      [id]
+    );
+
+    // Delete all history first
+    for (const courier of rows) {
+      await pool.query(
+        'DELETE FROM courier_status_history WHERE courier_id = ?',
+        [courier.courier_id]
+      );
+    }
+
+    // Then delete couriers
+    await pool.query(
+      'DELETE FROM couriers WHERE sender_id = ?',
+      [id]
+    );
+
+    // Then delete customer
+    await pool.query(
+      'DELETE FROM customers WHERE customer_id = ?',
+      [id]
+    );
+
     return NextResponse.json({ success: true });
-  } catch (error) {
-    return NextResponse.json({ error: 'Failed to delete customer' }, { status: 500 });
+
+  } catch (error: any) {
+    return NextResponse.json(
+      { error: error.message },
+      { status: 500 }
+    );
   }
 }
