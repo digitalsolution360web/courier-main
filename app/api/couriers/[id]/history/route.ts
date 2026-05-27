@@ -33,9 +33,19 @@ export async function POST(
     const { id } = await params;
     const body = await req.json();
     const { status, location, remarks } = body;
+    let updated_at = body.updated_at;
+
+    // Current time
+    const now = new Date();
+
+    // Extract current HH:mm:ss
+    const timePart = now.toTimeString().split(' ')[0];
+
+    // Combine form date + current time
+    updated_at = `${updated_at} ${timePart}`;
     
     console.log('Adding status for courier ID:', id);
-    console.log('Status data:', { status, location, remarks });
+    console.log('Status data:', { status, location, updated_at, remarks });
     
     // Validate courier_id
     if (!id) {
@@ -56,8 +66,8 @@ export async function POST(
     // Insert status history
     const [result] = await pool.query(
       `INSERT INTO courier_status_history (courier_id, status, location, remarks, updated_at)
-       VALUES (?, ?, ?, ?, NOW())`,
-      [id, status, location || null, remarks || null]
+       VALUES (?, ?, ?, ?, ?)`,
+      [id, status, location || null, remarks || null, updated_at]
     );
     
     // Update courier's current status

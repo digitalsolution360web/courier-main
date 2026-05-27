@@ -35,6 +35,7 @@ export default function CourierHistory() {
   const [newStatus, setNewStatus] = useState({
     status: '',
     location: '',
+    updated_at: '',
     remarks: ''
   });
 
@@ -82,7 +83,7 @@ export default function CourierHistory() {
 
       if (res.ok) {
         setShowAddStatus(false);
-        setNewStatus({ status: '', location: '', remarks: '' });
+        setNewStatus({ status: '', location: '', updated_at: '', remarks: '' });
         fetchHistory();
         alert('Status updated successfully!');
       } else {
@@ -228,6 +229,17 @@ export default function CourierHistory() {
                   onChange={(e) => setNewStatus({ ...newStatus, location: e.target.value })}
                   placeholder="e.g. Regional Hub, Terminal 3"
                   className="w-full bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-xl py-3 px-4 text-sm text-[var(--text-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--accent-primary)] transition-all"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-bold text-[var(--text-secondary)] uppercase tracking-widest mb-2">Date</label>
+                <input
+                  type="date"
+                  value={newStatus.updated_at}
+                  required
+                  onChange={(e) => setNewStatus({ ...newStatus, updated_at: e.target.value })}
+                  className="w-full bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-xl py-3 px-4 text-sm text-[var(--text-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--accent-primary)] transition-all"
+                  style={{ colorScheme: 'dark' }}
                 />
               </div>
               <div className="md:col-span-2">
