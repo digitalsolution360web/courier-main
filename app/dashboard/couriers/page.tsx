@@ -157,13 +157,27 @@ export default function CouriersPage() {
       )}
 
       {/* Search */}
-      <div className="relative mb-5">
+      {/* <div className="relative mb-5">
         <svg className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[var(--text-muted)]" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
         <input
           type="text" placeholder="Search by tracking id, sender or receiver..."
           value={search} onChange={e => { setSearch(e.target.value); setPage(1); }}
           className="w-full bg-[var(--bg-card)] border border-[var(--border-color)] rounded-xl py-3 pl-10 pr-4 text-[var(--text-primary)] text-sm outline-none"
         />
+      </div> */}
+      {/* Status Filter */}
+      <div className="relative mb-5 max-w-xs">
+        <select
+          value={search}
+          onChange={e => { setSearch(e.target.value); setPage(1); }}
+          className="w-full bg-[var(--bg-card)] border border-[var(--border-color)] rounded-xl py-3 px-4 text-[var(--text-primary)] text-sm outline-none cursor-pointer"
+          style={{ appearance: 'auto' }}
+        >
+          <option value="">All Statuses</option>
+          {statusOptions.map(status => (
+            <option key={status} value={status}>{status}</option>
+          ))}
+        </select>
       </div>
 
       {/* Desktop Table */}

@@ -36,16 +36,16 @@ export async function POST(
     let updated_at = body.updated_at;
 
     // Current time
-    const now = new Date();
+    // const now = new Date();
 
     // Extract current HH:mm:ss
-    const timePart = now.toTimeString().split(' ')[0];
+    // const timePart = now.toTimeString().split(' ')[0];
 
     // Combine form date + current time
-    updated_at = `${updated_at} ${timePart}`;
+    // updated_at = `${updated_at} ${timePart}`;
     
-    console.log('Adding status for courier ID:', id);
-    console.log('Status data:', { status, location, updated_at, remarks });
+    // console.log('Adding status for courier ID:', id);
+    // console.log('Status data:', { status, location, updated_at, remarks });
     
     // Validate courier_id
     if (!id) {
@@ -87,5 +87,18 @@ export async function POST(
       { error: 'Failed to add status update: ' + (error as Error).message },
       { status: 500 }
     );
+  }
+}
+export async function DELETE(req: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  try {
+    const { id } = await params;
+    
+    await pool.query('DELETE FROM courier_status_history WHERE status_id = ?', [id]);
+    
+    return NextResponse.json({ success: true });
+  } catch (error) {
+    return NextResponse.json({ error: 'Failed to delete shipment status' }, { status: 500 });
   }
 }

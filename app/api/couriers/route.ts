@@ -6,7 +6,7 @@ export async function GET(req: NextRequest) {
     const { searchParams } = new URL(req.url);
     const page = parseInt(searchParams.get('page') || '1');
     const limit = parseInt(searchParams.get('limit') || '10');
-    const search = searchParams.get('search') || '';
+    const status = searchParams.get('search') || ''; // Now filtering by status
     const offset = (page - 1) * limit;
     
     let query = `
@@ -18,16 +18,16 @@ export async function GET(req: NextRequest) {
     let countQuery = 'SELECT COUNT(*) as total FROM couriers';
     const params: any[] = [];
     
-    if (search) {
-      query += ' WHERE c.tracking_number LIKE ? OR s.full_name LIKE ? OR r.full_name LIKE ?';
-      countQuery += ' WHERE tracking_number LIKE ?';
-      params.push(`%${search}%`, `%${search}%`, `%${search}%`);
+    if (status) {
+      query += ' WHERE c.current_status = ?';
+      countQuery += ' WHERE current_status = ?';
+      params.push(status);
     }
     
     query += ' ORDER BY c.shipment_date DESC LIMIT ? OFFSET ?';
     
     const [rows] = await pool.query(query, [...params, limit, offset]);
-    const [countResult] = await pool.query(countQuery, params.slice(0, 1));
+    const [countResult] = await pool.query(countQuery, params);
     
     return NextResponse.json({
       data: rows,
@@ -40,6 +40,46 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: 'Failed to fetch couriers' }, { status: 500 });
   }
 }
+
+// export async function GET(req: NextRequest) {
+//   try {
+//     const { searchParams } = new URL(req.url);
+//     const page = parseInt(searchParams.get('page') || '1');
+//     const limit = parseInt(searchParams.get('limit') || '10');
+//     const search = searchParams.get('search') || '';
+//     const offset = (page - 1) * limit;
+    
+//     let query = `
+//       SELECT c.*, 
+//              s.full_name as sender_name
+//       FROM couriers c
+//       LEFT JOIN customers s ON c.sender_id = s.customer_id
+//     `;
+//     let countQuery = 'SELECT COUNT(*) as total FROM couriers';
+//     const params: any[] = [];
+    
+//     if (search) {
+//       query += ' WHERE c.tracking_number LIKE ? OR s.full_name LIKE ? OR r.full_name LIKE ?';
+//       countQuery += ' WHERE tracking_number LIKE ?';
+//       params.push(`%${search}%`, `%${search}%`, `%${search}%`);
+//     }
+    
+//     query += ' ORDER BY c.shipment_date DESC LIMIT ? OFFSET ?';
+    
+//     const [rows] = await pool.query(query, [...params, limit, offset]);
+//     const [countResult] = await pool.query(countQuery, params.slice(0, 1));
+    
+//     return NextResponse.json({
+//       data: rows,
+//       total: (countResult as any[])[0].total,
+//       page,
+//       limit
+//     });
+//   } catch (error: any) {
+//     console.error('API Error (Couriers):', error.message || error);
+//     return NextResponse.json({ error: 'Failed to fetch couriers' }, { status: 500 });
+//   }
+// }
 
 export async function POST(req: NextRequest) {
   try {
