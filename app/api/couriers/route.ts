@@ -109,7 +109,7 @@ export async function POST(req: NextRequest) {
   `INSERT INTO courier_status_history
   (courier_id, status, location, updated_at)
   VALUES (?, ?, ?, ?)`,
-  [courier_id, "Booked", origin, shipment_date]
+  [courier_id, "Picked Up", origin, shipment_date]
 );
     
     return NextResponse.json({ success: true, id: (result as any).insertId });
