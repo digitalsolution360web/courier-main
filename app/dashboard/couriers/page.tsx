@@ -99,8 +99,12 @@ export default function CouriersPage() {
         package_weight: c.package_weight?.toString() || '',
         quantity: c.quantity?.toString() || '',
         item_description: c.item_description || '',
-        shipment_date: c.shipment_date ? new Date(c.shipment_date).toISOString().split('T')[0] : '',
-        expected_delivery: c.expected_delivery ? new Date(c.expected_delivery).toISOString().split('T')[0] : '',
+        shipment_date: c.shipment_date
+    ? c.shipment_date.replace(" ", "T").slice(0, 16)
+    : "",
+        expected_delivery: c.expected_delivery
+    ? c.expected_delivery.replace(" ", "T").slice(0, 16)
+    : "",
         current_status: c.current_status,
       });
     } else {
@@ -454,14 +458,14 @@ export default function CouriersPage() {
                   </div>
                   <div className="col-span-1">
                     <label className="block text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-wider mb-1">Shipment Date</label>
-                    <input type="date" required value={formData.shipment_date} onChange={e => setFormData(f => ({ ...f, shipment_date: e.target.value }))}
+                    <input type="datetime-local" required value={formData.shipment_date} onChange={e => setFormData(f => ({ ...f, shipment_date: e.target.value }))}
                       className="w-full bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-xl py-2 px-3 text-[var(--text-primary)] text-xs outline-none"
                       style={{ colorScheme: 'dark' }}
                     />
                   </div>
                   <div className="col-span-1">
                     <label className="block text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-wider mb-1">Delivery Date</label>
-                    <input type="date" required value={formData.expected_delivery} onChange={e => setFormData(f => ({ ...f, expected_delivery: e.target.value }))}
+                    <input type="datetime-local" required value={formData.expected_delivery} onChange={e => setFormData(f => ({ ...f, expected_delivery: e.target.value }))}
                       className="w-full bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-xl py-2 px-3 text-[var(--text-primary)] text-xs outline-none"
                       style={{ colorScheme: 'dark' }}
                     />

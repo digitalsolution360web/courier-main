@@ -86,14 +86,6 @@ export async function POST(req: NextRequest) {
     const body = await req.json();
     let { tracking_number, courier_type, forwarded_details_code, sender_id, receiver, origin, destination, package_weight, quantity, item_description, shipment_date, expected_delivery } = body;
 
-    // Current time
-    const now = new Date();
-
-    // Extract current HH:mm:ss
-    const timePart = now.toTimeString().split(' ')[0];
-
-    // Combine form date + current time
-    shipment_date = `${shipment_date} ${timePart}`;
     
     const [result] = await pool.query(
       `INSERT INTO couriers 
