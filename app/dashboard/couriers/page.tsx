@@ -60,7 +60,7 @@ export default function CouriersPage() {
   const [formData, setFormData]     = useState({
     tracking_number: '', courier_type: '',  forwarded_details_code: '', sender_id: '', receiver: '',
     origin: '', destination: '', package_weight: '', quantity: '', item_description: '', shipment_date: '',
-    expected_delivery: '', current_status: 'Booked'
+    expected_delivery: '', current_status: 'Picked Up'
   });
 
   const limit = 10;
@@ -105,7 +105,7 @@ export default function CouriersPage() {
       });
     } else {
       setEditingCourier(null);
-      setFormData({ tracking_number: '', courier_type: '',  forwarded_details_code:'', sender_id: '', receiver: '', origin: '', destination: '', package_weight: '', quantity: '', item_description: '', shipment_date: '', expected_delivery: '', current_status: 'Booked' });
+      setFormData({ tracking_number: '', courier_type: '',  forwarded_details_code:'', sender_id: '', receiver: '', origin: '', destination: '', package_weight: '', quantity: '', item_description: '', shipment_date: '', expected_delivery: '', current_status: 'Picked Up' });
     }
     setShowModal(true);
   };
