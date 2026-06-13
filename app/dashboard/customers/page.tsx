@@ -179,7 +179,7 @@ export default function CustomersPage() {
                     <td className="px-5 py-4">
               
                       <div className="text-xs text-[var(--text-muted)]" suppressHydrationWarning>Joined {new Date(customer.created_at).toLocaleDateString("en-IN", {
-      timeZone: "Asia/Kolkata",
+      timeZone: "UTC",
       day: "2-digit",
       month: "short",
       year: "numeric"
@@ -225,7 +225,7 @@ export default function CustomersPage() {
                   </div>
                   <h3 className="font-bold text-[var(--text-primary)] text-sm truncate">{customer.full_name}</h3>
                   <p className="text-xs text-[var(--text-muted)] mt-0.5" suppressHydrationWarning>Joined {new Date(customer.created_at).toLocaleDateString("en-IN", {
-      timeZone: "Asia/Kolkata",
+      timeZone: "UTC",
       day: "2-digit",
       month: "short",
       year: "numeric"
