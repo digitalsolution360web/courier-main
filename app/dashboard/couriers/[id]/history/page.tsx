@@ -111,7 +111,14 @@ export default function CourierHistory() {
   const handleDelete = async (id: number) => {
     if (!confirm('Are you sure you want to delete this shipment status?')) return;
     const res = await fetch(`/api/couriers/${id}/history`, { method: 'DELETE' });
-    if (res.ok) fetchHistory();
+    const data = await res.json();
+
+    if (res.ok) {
+      alert(data.message || 'Status deleted successfully');
+      fetchHistory();
+    } else {
+      alert(data.error || 'Failed to delete shipment status');
+    }
   };
 
   if (loading) {
@@ -309,7 +316,7 @@ export default function CourierHistory() {
                     </span>
                     <div>
                     <span className="text-xs font-mono text-[var(--text-muted)] bg-[var(--bg-secondary)] px-2 py-1 rounded">
-                      {new Date(item.updated_at).toLocaleString('en-US', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
+                      {new Date(item.updated_at).toLocaleString('en-IN', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
                     </span>
                     <button onClick={() => handleDelete(item.status_id)} className="p-2 text-[var(--accent-rose)] hover:bg-[rgba(244,63,94,0.1)] rounded-lg transition-colors">
                           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="3 6 5 6 21 6" /><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" /></svg>

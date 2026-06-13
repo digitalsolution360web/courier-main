@@ -35,18 +35,6 @@ export async function POST(
     const { status, location, remarks } = body;
     let updated_at = body.updated_at;
 
-    // Current time
-    // const now = new Date();
-
-    // Extract current HH:mm:ss
-    // const timePart = now.toTimeString().split(' ')[0];
-
-    // Combine form date + current time
-    // updated_at = `${updated_at} ${timePart}`;
-    
-    // console.log('Adding status for courier ID:', id);
-    // console.log('Status data:', { status, location, updated_at, remarks });
-    
     // Validate courier_id
     if (!id) {
       return NextResponse.json({ error: 'Courier ID is required' }, { status: 400 });
@@ -89,16 +77,75 @@ export async function POST(
     );
   }
 }
-export async function DELETE(req: NextRequest,
+export async function DELETE(
+  req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const { id } = await params;
-    
-    await pool.query('DELETE FROM courier_status_history WHERE status_id = ?', [id]);
-    
-    return NextResponse.json({ success: true });
+
+    // Get status record details first
+    const [statusRows] = await pool.query(
+      `SELECT courier_id 
+       FROM courier_status_history 
+       WHERE status_id = ?`,
+      [id]
+    );
+
+    const statuses = statusRows as any[];
+
+    if (statuses.length === 0) {
+      return NextResponse.json(
+        { error: 'Status record not found' },
+        { status: 404 }
+      );
+    }
+
+    const courierId = statuses[0].courier_id;
+
+    // Delete the status
+    await pool.query(
+      `DELETE FROM courier_status_history
+       WHERE status_id = ?`,
+      [id]
+    );
+
+    // Get latest remaining status
+    const [latestRows] = await pool.query(
+      `SELECT status
+       FROM courier_status_history
+       WHERE courier_id = ?
+       ORDER BY updated_at DESC, status_id DESC
+       LIMIT 1`,
+      [courierId]
+    );
+
+    const latestStatus = (latestRows as any[])[0];
+
+    // Update courier current status
+    if (latestStatus) {
+      await pool.query(
+        `UPDATE couriers
+         SET current_status = ?
+         WHERE courier_id = ?`,
+        [latestStatus.status, courierId]
+      );
+    }
+
+    return NextResponse.json({
+      success: true,
+      message: 'Status deleted successfully'
+    });
   } catch (error) {
-    return NextResponse.json({ error: 'Failed to delete shipment status' }, { status: 500 });
+    console.error('Failed to delete shipment status:', error);
+
+    return NextResponse.json(
+      {
+        error:
+          'Failed to delete shipment status: ' +
+          (error as Error).message,
+      },
+      { status: 500 }
+    );
   }
 }

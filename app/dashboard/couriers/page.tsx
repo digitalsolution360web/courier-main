@@ -252,7 +252,7 @@ export default function CouriersPage() {
                     </td>
                     
                     <td className="px-5 py-4 text-sm text-[var(--text-secondary)]">
-                      <div className="text-[11px] text-[var(--text-primary)] mt-0.5" suppressHydrationWarning>{c.shipment_date ? new Date(c.shipment_date).toLocaleDateString("en-GB") : 'Pending'}</div>
+                      <div className="text-[11px] text-[var(--text-primary)] mt-0.5" suppressHydrationWarning>{c.shipment_date ? new Date(c.shipment_date).toLocaleDateString("en-IN") : 'Pending'}</div>
                       
                       </td>
                     <td className="px-5 py-4"><StatusBadge status={c.current_status} /></td>
@@ -296,7 +296,7 @@ export default function CouriersPage() {
               <div className="flex justify-between items-start mb-3">
                 <div>
                   <span className="font-mono text-sm font-bold text-[var(--accent-primary)]">{c.tracking_number}</span>
-                  <div className="text-[11px] text-[var(--text-muted)] mt-0.5">{c.shipment_date ? new Date(c.shipment_date).toLocaleDateString("en-GB") : 'Pending'}</div>
+                  <div className="text-[11px] text-[var(--text-muted)] mt-0.5">{c.shipment_date ? new Date(c.shipment_date).toLocaleDateString("en-IN") : 'Pending'}</div>
                 </div>
                 <StatusBadge status={c.current_status} />
               </div>
@@ -310,7 +310,7 @@ export default function CouriersPage() {
                 <div><span className="font-bold text-[var(--text-muted)]">Sender:</span> {c.sender_name || '—'}</div>
                 <div><span className="font-bold text-[var(--text-muted)]">Receiver:</span> {c.receiver || '—'}</div>
                 <div><span className="font-bold text-[var(--text-muted)]">Weight:</span> {c.package_weight} KG</div>
-                <div><span className="font-bold text-[var(--text-muted)]">ETA:</span> <span suppressHydrationWarning>{c.expected_delivery ? new Date(c.expected_delivery).toLocaleDateString("en-GB") : '—'}</span></div>
+                <div><span className="font-bold text-[var(--text-muted)]">ETA:</span> <span suppressHydrationWarning>{c.expected_delivery ? new Date(c.expected_delivery).toLocaleDateString("en-IN") : '—'}</span></div>
               </div>
               {/* Actions */}
               <div className="flex gap-2 pt-3 border-t border-[var(--border-color)]">
