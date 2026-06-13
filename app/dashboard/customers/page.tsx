@@ -178,7 +178,12 @@ export default function CustomersPage() {
                     <td className="px-5 py-4 text-sm text-[var(--text-secondary)] max-w-xs truncate">{customer.address || '—'}</td>
                     <td className="px-5 py-4">
               
-                      <div className="text-xs text-[var(--text-muted)]" suppressHydrationWarning>Joined {new Date(customer.created_at).toLocaleDateString("en-IN")}</div>
+                      <div className="text-xs text-[var(--text-muted)]" suppressHydrationWarning>Joined {new Date(customer.created_at).toLocaleDateString("en-IN", {
+      timeZone: "Asia/Kolkata",
+      day: "2-digit",
+      month: "short",
+      year: "numeric"
+    })}</div>
                     </td>
                     <td className="px-5 py-4 text-right">
                       <div className="flex justify-end gap-2">
@@ -219,7 +224,13 @@ export default function CustomersPage() {
                     <span className="text-[10px] font-mono text-[var(--text-muted)] bg-[var(--bg-secondary)] px-1.5 py-0.5 rounded">#{customer.customer_id}</span>
                   </div>
                   <h3 className="font-bold text-[var(--text-primary)] text-sm truncate">{customer.full_name}</h3>
-                  <p className="text-xs text-[var(--text-muted)] mt-0.5" suppressHydrationWarning>Joined {new Date(customer.created_at).toLocaleDateString("en-IN")}</p>
+                  <p className="text-xs text-[var(--text-muted)] mt-0.5" suppressHydrationWarning>Joined {new Date(customer.created_at).toLocaleDateString("en-IN", {
+      timeZone: "Asia/Kolkata",
+      day: "2-digit",
+      month: "short",
+      year: "numeric"
+    })
+  }</p>
                 </div>
                 <div className="flex gap-1.5 ml-2">
                   <button onClick={() => openModal(customer)} className="p-2 text-[var(--accent-sky)] hover:bg-[rgba(14,165,233,0.1)] rounded-lg transition-colors">
