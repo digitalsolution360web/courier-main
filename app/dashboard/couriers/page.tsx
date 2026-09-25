@@ -131,6 +131,214 @@ export default function CouriersPage() {
     const res = await fetch(`/api/couriers?id=${id}`, { method: 'DELETE' });
     if (res.ok) fetchCouriers();
   };
+    const escapeHtml = (v: any) =>
+    String(v ?? '—').replace(/[&<>"']/g, m =>
+      ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' } as Record<string, string>)[m]
+    );
+
+      const generateInvoice = (c: Courier) => {
+    const fmtDate = (d?: string) =>
+      d
+        ? new Date(d).toLocaleDateString('en-IN', {
+            timeZone: 'UTC', day: '2-digit', month: '2-digit', year: 'numeric',
+          }).replace(/\//g, '/')
+        : '—';
+
+    const invoiceNo = `ASC/00${String(c.courier_id).padStart(3, '0')}/26-27`;
+    const today = new Date().toLocaleDateString('en-IN', {
+      day: '2-digit', month: '2-digit', year: 'numeric',
+    });
+
+    // Mock data for fields not in your Courier interface
+    const mockAmount = 153310.0;
+    const mockCgst = 13797.90;
+    const mockSgst = 13797.90;
+    const mockIgst = 0.00;
+    const mockTotal = 180905.80;
+
+    const html = `<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>Invoice - ${invoiceNo}</title>
+<style>
+  * { box-sizing: border-box; }
+  body { font-family: Arial, sans-serif; margin: 0; padding: 20px; color: #000; background: #fff; font-size: 11px; }
+  .wrap { max-width: 900px; margin: 0 auto; border: 1px solid #000; padding: 10px; }
+  
+  /* Header */
+  .header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
+  .company-info { text-align: center; flex: 1; }
+  
+  /* LOGO STYLES ADDED HERE */
+  .company-name { text-align: center; margin-bottom: 5px; }
+  .company-name img { max-height: 70px; max-width: 100%; object-fit: contain; display: inline-block; }
+  
+  .company-details { font-size: 10px; line-height: 1.4; margin: 0; }
+  .tax-info { text-align: right; font-size: 10px; font-weight: bold; margin-top: 10px; display: none; }
+  
+  /* Meta Section */
+  .meta-section { display: flex; justify-content: space-between; margin-bottom: 5px; font-size: 11px; }
+  .meta-left { width: 60%; }
+  .meta-right { width: 35%; text-align: right; }
+  .meta-row { display: flex; margin-bottom: 2px; }
+  .meta-label { font-weight: bold; width: 80px; }
+  .meta-value { flex: 1; }
+  
+  /* Table */
+  .main-table { width: 100%; border-collapse: collapse; margin-bottom: 5px; }
+  .main-table th, .main-table td { border: 1px solid #000; padding: 4px 6px; text-align: center; font-size: 11px; }
+  .main-table th { font-weight: bold; text-transform: uppercase; }
+  .main-table td { height: 25px; }
+  
+  /* Summary Section */
+  .summary-section { display: flex; justify-content: space-between; margin-bottom: 10px; }
+  .summary-left { width: 60%; border: 1px solid #000; padding: 8px; }
+  .summary-right { width: 38%; border: 1px solid #000; padding: 8px; }
+  .summary-row { display: flex; justify-content: space-between; margin-bottom: 4px; font-size: 11px; }
+  .summary-row.bold { font-weight: bold; }
+  .summary-label { flex: 1; }
+  .summary-value { width: 100px; text-align: right; }
+  .words { font-weight: bold; margin-top: 6px; font-size: 11px; }
+  
+  /* Bank Details */
+  .bank-details { width: 60%; border: 1px solid #000; padding: 8px; margin-bottom: 10px; font-size: 11px; }
+  .bank-row { display: flex; margin-bottom: 2px; }
+  .bank-label { font-weight: bold; width: 80px; }
+  
+  /* Footer */
+  .footer { display: flex; justify-content: space-between; align-items: flex-end; margin-top: 20px; font-size: 11px; }
+  .footer-left { font-weight: bold; }
+  .footer-right { text-align: right; font-weight: bold; }
+  
+  @media print { body { padding: 0; } .wrap { border: none; } }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <!-- Header -->
+    <div class="header">
+      <div class="company-info">
+      
+        <!-- YOUR LOGO ADDED HERE -->
+        <div class="company-name">
+          <img src="${window.location.origin}/logo.webp" alt="Deb Air Express" />
+        </div>
+        
+        <div class="company-details">
+          F-7 ground floor,<br/>
+          Main road Kalkaji, 110017<br/>
+          PHONE NO. : 9811350228 / 9311350228<br/>
+          EMAIL ID : debairexpress228@gmail.com
+        </div>
+        <div class="tax-info">
+          PAN :- CHNPP8155M &nbsp;&nbsp; GSTIN :- 07CHNPP8155M1ZG
+        </div>
+      </div>
+    </div>
+
+    <!-- Meta -->
+    <div class="meta-section">
+      <div class="meta-left">
+        <div class="meta-row"><span class="meta-label">Invoice No:</span> <span class="meta-value">${invoiceNo}</span></div>
+        <div class="meta-row"><span class="meta-label">Billed To:</span> <span class="meta-value" style="font-weight:bold;">${escapeHtml(c.receiver || 'DEB AIR EXPRESS CARGO & COURIERS')}</span></div>
+        <div class="meta-row"><span class="meta-label"></span> <span class="meta-value">${escapeHtml(c.destination || 'F-7, GF, MAIN ROAD KALKAJI, NEW DELHI- 110019')}</span></div>
+      </div>
+      <div class="meta-right">
+        <div class="meta-row"><span class="meta-label" style="width:auto; margin-right:10px;">Date :</span> <span class="meta-value" style="width:100px;">${today}</span></div>
+        <div class="meta-row"><span class="meta-label" style="width:auto; margin-right:10px;">State :-</span> <span class="meta-value" style="width:100px;">delhi</span></div>
+        <div class="meta-row"><span class="meta-label" style="width:auto; margin-right:10px;">State Code :-</span> <span class="meta-value" style="width:100px;">07</span></div>
+        <div class="meta-row"><span class="meta-label" style="width:auto; margin-right:10px;">HSN Code :-</span> <span class="meta-value" style="width:100px;">9965</span></div>
+      </div>
+    </div>
+
+    <!-- Table Text -->
+    <div style="font-size: 10px; margin-bottom: 4px;">Being Transportation charges for carrying your materials as per details given below :-</div>
+
+    <!-- Main Table -->
+    <table class="main-table">
+      <thead>
+        <tr>
+          <th style="width: 60px;">C/N NO.</th>
+          <th style="width: 70px;">DATE</th>
+          <th>FROM</th>
+          <th>TO</th>
+          <th style="width: 50px;">PKG.</th>
+          <th style="width: 70px;">WEIGHT</th>
+          <th style="width: 60px;">DOCKET<br/>CHG.</th>
+          <th style="width: 50px;">DOOR<br/>DELV.</th>
+          <th style="width: 50px;">RATE</th>
+          <th style="width: 80px;">AMOUNT<br/>Rs. &nbsp; P.</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>${escapeHtml(c.tracking_number)}</td>
+          <td>${fmtDate(c.shipment_date)}</td>
+          <td>${escapeHtml(c.origin)}</td>
+          <td>${escapeHtml(c.destination)}</td>
+          <td>${escapeHtml(c.quantity)}</td>
+          <td>${escapeHtml(c.package_weight)}</td>
+          <td>850.00</td>
+          <td>0.00</td>
+          <td></td>
+          <td>${mockAmount.toFixed(2)}</td>
+        </tr>
+        <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+        <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+      </tbody>
+    </table>
+
+    <!-- Summary Block -->
+    <div class="summary-section">
+      <div class="summary-left">
+        <div class="summary-row"><span class="summary-label">TOTAL BILLED AMOUNT :-</span> <span class="summary-value">336954.90</span></div>
+        <div class="summary-row"><span class="summary-label">TOTAL RECD. AMOUNT :-</span> <span class="summary-value">123056.30</span></div>
+        <div class="summary-row"><span class="summary-label">TOTAL OUTSTANDING :-</span> <span class="summary-value">213898.60</span></div>
+      </div>
+      <div class="summary-right">
+        <div class="summary-row"><span class="summary-label">CGST@ 9.00</span> <span class="summary-value">${mockCgst.toFixed(2)}</span></div>
+        <div class="summary-row"><span class="summary-label">SGST@ 9.00</span> <span class="summary-value">${mockSgst.toFixed(2)}</span></div>
+        <div class="summary-row"><span class="summary-label">IGST @ 0.00</span> <span class="summary-value">${mockIgst.toFixed(2)}</span></div>
+        <div class="summary-row bold"><span class="summary-label">AMOUNT</span> <span class="summary-value">${mockTotal.toFixed(2)}</span></div>
+      </div>
+    </div>
+
+    <div class="words">AMOUNT IN WORDS: ONE LAC EIGHTY THOUSAND NINE HUNDRED FIVE AND PAISE EIGHTY ONLY.</div>
+
+    <!-- Bank Details -->
+    <div class="bank-details" style="margin-top: 10px; display:none;">
+      <div class="bank-row"><span class="bank-label">DETAILS:-</span> <span class="bank-value">A/C NO. :- 5448193147</span></div>
+      <div class="bank-row"><span class="bank-label">CODE :-</span> <span class="bank-value">KKBK0004596</span></div>
+      <div class="bank-row"><span class="bank-label">BANK NAME :-</span> <span class="bank-value">KOTAK MAHINDRA BANK</span></div>
+      <div class="bank-row"><span class="bank-label">BRANCH :-</span> <span class="bank-value">BLOCK NO 4, DESHBANDHU GUPTA ROAD PAHARGANJ, NEW DELHI-110055</span></div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+      <div class="footer-left"></div>
+      <div class="footer-right">
+        For DEB AIR EXPRESS<br/><br/><br/>
+        Authorised Signatory
+      </div>
+    </div>
+  </div>
+
+  <script>
+    window.onload = function () { setTimeout(function () { window.print(); }, 500); };
+  </script>
+</body>
+</html>`;
+
+    const win = window.open('', '_blank', 'width=1000,height=800');
+    if (!win) {
+      alert('Please allow pop-ups to generate the invoice.');
+      return;
+    }
+    win.document.open();
+    win.document.write(html);
+    win.document.close();
+  };
 
   return (
     <>
@@ -267,6 +475,15 @@ export default function CouriersPage() {
                         <Link href={`/dashboard/couriers/${c.courier_id}/history`} className="p-1.5 rounded-lg bg-[rgba(99,102,241,0.1)] text-[var(--accent-primary)] flex hover:bg-[rgba(99,102,241,0.2)] transition-colors">
                           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
                         </Link>
+                        {c.current_status === 'Delivered' && (
+                                                <button
+                          onClick={() => generateInvoice(c)}
+                          title="Generate Invoice"
+                          className="p-1.5 rounded-lg bg-[rgba(16,185,129,0.1)] text-[#10b981] flex cursor-pointer border-none hover:bg-[rgba(16,185,129,0.2)] transition-colors"
+                        >
+                          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                        </button>
+                        )}
                         <button onClick={() => openModal(c)} className="p-1.5 rounded-lg bg-[rgba(14,165,233,0.1)] text-[var(--accent-sky)] flex cursor-pointer border-none hover:bg-[rgba(14,165,233,0.2)] transition-colors">
                           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
                         </button>
@@ -336,6 +553,15 @@ export default function CouriersPage() {
                   <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
                   History
                 </Link>
+                {c.current_status === 'Delivered' && (
+                                <button
+                  onClick={() => generateInvoice(c)}
+                  className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg bg-[rgba(16,185,129,0.1)] text-[#10b981] text-xs font-bold border-none cursor-pointer hover:bg-[rgba(16,185,129,0.2)] transition-colors"
+                >
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                  Invoice
+                </button>
+                )}
                 <button onClick={() => openModal(c)} className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg bg-[rgba(14,165,233,0.1)] text-[var(--accent-sky)] text-xs font-bold border-none cursor-pointer hover:bg-[rgba(14,165,233,0.2)] transition-colors">
                   <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
                   Edit
