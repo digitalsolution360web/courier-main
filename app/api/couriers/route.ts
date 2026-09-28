@@ -1,46 +1,69 @@
 import { NextRequest, NextResponse } from 'next/server';
-import pool from '@/lib/db';
+import pool from '@/lib/db'; // adjust to your actual import
 
 export async function GET(req: NextRequest) {
   try {
     const { searchParams } = new URL(req.url);
-    const page = parseInt(searchParams.get('page') || '1');
+    const page  = parseInt(searchParams.get('page') || '1');
     const limit = parseInt(searchParams.get('limit') || '10');
-    const status = searchParams.get('search') || ''; // Now filtering by status
+    const status = searchParams.get('search') || '';
+    const sender = searchParams.get('sender') || '';
+    const month  = searchParams.get('month')  || '';
     const offset = (page - 1) * limit;
-    
-    let query = `
-      SELECT c.*, 
-             s.full_name as sender_name
-      FROM couriers c
-      LEFT JOIN customers s ON c.sender_id = s.customer_id
-    `;
-    let countQuery = 'SELECT COUNT(*) as total FROM couriers';
+
+    // Build WHERE clause once, reuse for both queries
+    const conditions: string[] = [];
     const params: any[] = [];
-    
+
     if (status) {
-      query += ' WHERE c.current_status = ?';
-      countQuery += ' WHERE current_status = ?';
+      conditions.push('c.current_status = ?');
       params.push(status);
     }
-    
-    query += ' ORDER BY c.shipment_date DESC LIMIT ? OFFSET ?';
-    
+
+    if (sender) {
+      conditions.push('s.full_name LIKE ?');
+      params.push(`%${sender}%`);
+    }
+
+    if (month) {
+      const [year, monthValue] = month.split('-');
+      conditions.push('YEAR(c.shipment_date) = ? AND MONTH(c.shipment_date) = ?');
+      params.push(Number(year), Number(monthValue));
+    }
+
+    const whereSql = conditions.length ? `WHERE ${conditions.join(' AND ')}` : '';
+
+    const query = `
+      SELECT c.*,
+             s.full_name AS sender_name
+      FROM couriers c
+      LEFT JOIN customers s ON c.sender_id = s.customer_id
+      ${whereSql}
+      ORDER BY c.shipment_date DESC
+      LIMIT ? OFFSET ?
+    `;
+
+    const countQuery = `
+      SELECT COUNT(*) AS total
+      FROM couriers c
+      LEFT JOIN customers s ON c.sender_id = s.customer_id
+      ${whereSql}
+    `;
+
     const [rows] = await pool.query(query, [...params, limit, offset]);
     const [countResult] = await pool.query(countQuery, params);
-    
+
     return NextResponse.json({
       data: rows,
       total: (countResult as any[])[0].total,
       page,
-      limit
+      limit,
     });
   } catch (error: any) {
     console.error('API Error (Couriers):', error.message || error);
     return NextResponse.json({ error: 'Failed to fetch couriers' }, { status: 500 });
   }
 }
-
 // export async function GET(req: NextRequest) {
 //   try {
 //     const { searchParams } = new URL(req.url);
