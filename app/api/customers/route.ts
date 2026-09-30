@@ -39,11 +39,11 @@ export async function GET(req: NextRequest) {
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { full_name, phone, email, address } = body;
+    const { full_name, phone, email, address, gst } = body;
     
     const [result] = await pool.query(
-      'INSERT INTO customers (full_name, phone, email, address) VALUES (?, ?, ?, ?)',
-      [full_name, phone, email, address]
+      'INSERT INTO customers (full_name, phone, email, address, gst) VALUES (?, ?, ?, ?, ?)',
+      [full_name, phone, email, address, gst]
     );
     
     return NextResponse.json({ success: true, id: (result as any).insertId });
@@ -55,11 +55,11 @@ export async function POST(req: NextRequest) {
 export async function PUT(req: NextRequest) {
   try {
     const body = await req.json();
-    const { customer_id, full_name, phone, email, address } = body;
+    const { customer_id, full_name, phone, email, address, gst } = body;
     
     await pool.query(
-      'UPDATE customers SET full_name = ?, phone = ?, email = ?, address = ? WHERE customer_id = ?',
-      [full_name, phone, email, address, customer_id]
+      'UPDATE customers SET full_name = ?, phone = ?, email = ?, address = ?, gst = ? WHERE customer_id = ?',
+      [full_name, phone, email, address, gst, customer_id]
     );
     
     return NextResponse.json({ success: true });

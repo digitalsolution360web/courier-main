@@ -19,6 +19,7 @@ interface Courier {
   shipment_date: string;
   expected_delivery: string;
   current_status: string;
+  address?: string;
 }
 
 const STATUS_CONFIG: Record<string, { bg: string; color: string; dot: string; border: string }> = {
@@ -171,6 +172,16 @@ export default function CouriersPage() {
   /* Header */
   .header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
   .company-info { text-align: center; flex: 1; }
+    /* Header Table */
+  .header-table { width: 100%; border-collapse: collapse; border: 1px solid #000; margin-bottom: 0; }
+  .header-table .header-cell { text-align: center; padding: 8px 10px; border: 1px solid #000; }
+  .header-table .header-tax-cell { text-align: right; padding: 4px 10px; border: 1px solid #000; font-size: 10px; font-weight: bold; }
+
+  /* Meta Table */
+  .meta-table { width: 100%; border-collapse: collapse; border: 1px solid #000; border-top: none; margin-bottom: 5px; }
+  .meta-table .meta-cell { padding: 4px 8px; border: 1px solid #000; font-size: 11px; vertical-align: middle; }
+  .meta-table .meta-label { font-weight: bold; display: inline-block; min-width: 70px; }
+  .meta-table .meta-value { display: inline; }
   
   /* LOGO STYLES ADDED HERE */
   .company-name { text-align: center; margin-bottom: 5px; font-size: 30px; font-weight: bold; }
@@ -217,46 +228,79 @@ export default function CouriersPage() {
 </style>
 </head>
 <body>
-  <div class="wrap">
-    <!-- Header -->
-    <div class="header">
-      <div class="company-info">
-      
-        <!-- YOUR LOGO ADDED HERE -->
-        <div class="company-name">
-          <img src="${window.location.origin}/logo.webp" alt="Deb Air Express" style="display:none;" />
-          Deb Air Express
-        </div>
-        
-        <div class="company-details">
-          F-7 ground floor,<br/>
-          Main road Kalkaji, 110017<br/>
-          PHONE NO. : 9811350228 / 9311350228<br/>
-          EMAIL ID : debairexpress228@gmail.com
-        </div>
-        <div class="tax-info">
-          PAN :- CHNPP8155M &nbsp;&nbsp; GSTIN :- 07CHNPP8155M1ZG
-        </div>
-      </div>
-    </div>
+   <div class="wrap">
+    <!-- Header Table -->
+    <table class="header-table">
+      <tbody>
+        <tr>
+          <td class="header-cell">
+            <div class="company-name">
+              <img src="${window.location.origin}/logo.webp" alt="Deb Air Express" style="display:none;" />
+              Deb Air Express
+            </div>
+            <div class="company-details">
+              F-7 ground floor, Main road Kalkaji, 110017<br/>
+              PHONE NO. : 9811350228 / 9311350228<br/>
+              EMAIL ID : debairexpress228@gmail.com
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td class="header-tax-cell">
+            PAN :- CHNPP8155M &nbsp;&nbsp;&nbsp; GSTIN :- 07CHNPP8155M1ZG
+          </td>
+        </tr>
+      </tbody>
+    </table>
 
-    <!-- Meta -->
-    <div class="meta-section">
-      <div class="meta-left">
-        <div class="meta-row"><span class="meta-label">Invoice No:</span> <span class="meta-value">${invoiceNo}</span></div>
-        <div class="meta-row"><span class="meta-label">Billed To:</span> <span class="meta-value" style="font-weight:bold;">${escapeHtml(c.receiver || 'DEB AIR EXPRESS CARGO & COURIERS')}</span></div>
-        <div class="meta-row"><span class="meta-label"></span> <span class="meta-value">${escapeHtml(c.destination || 'F-7, GF, MAIN ROAD KALKAJI, NEW DELHI- 110019')}</span></div>
-      </div>
-      <div class="meta-right">
-        <div class="meta-row"><span class="meta-label" style="width:auto; margin-right:10px;">Date :</span> <span class="meta-value" style="width:100px;">${today}</span></div>
-        <div class="meta-row"><span class="meta-label" style="width:auto; margin-right:10px;">State :-</span> <span class="meta-value" style="width:100px;">delhi</span></div>
-        <div class="meta-row"><span class="meta-label" style="width:auto; margin-right:10px;">State Code :-</span> <span class="meta-value" style="width:100px;">07</span></div>
-        <div class="meta-row"><span class="meta-label" style="width:auto; margin-right:10px;">HSN Code :-</span> <span class="meta-value" style="width:100px;">9965</span></div>
-      </div>
-    </div>
+    <!-- Meta Table -->
+    <table class="meta-table">
+      <tbody>
+        <!-- Row 1: Invoice No | Date -->
+        <tr>
+          <td class="meta-cell" style="width: 60%;">
+            <span class="meta-label">Invoice No:</span>
+            <span class="meta-value">${invoiceNo}</span>
+          </td>
+          <td class="meta-cell" style="width: 40%;">
+            <span class="meta-label">Date :</span>
+            <span class="meta-value">${today}</span>
+          </td>
+        </tr>
+
+        <!-- Row 2: Billed To | State -->
+        <tr>
+          <td class="meta-cell" rowspan="3" style="vertical-align: top;">
+            <div style="margin-bottom: 3px;">
+              <span class="meta-label">Billed To:</span>
+              <span class="meta-value" style="font-weight:bold;">${escapeHtml(c.receiver || 'DEB AIR EXPRESS CARGO & COURIERS')}</span>
+            </div>
+            <div style="padding-left: 80px;">
+              ${escapeHtml(c.address || 'F-7, GF, MAIN ROAD KALKAJI, NEW DELHI-110019')}
+            </div>
+          </td>
+          <td class="meta-cell">
+            <span class="meta-label">State :-</span>
+            <span class="meta-value">delhi</span>
+          </td>
+        </tr>
+        <tr>
+          <td class="meta-cell">
+            <span class="meta-label">State Code :-</span>
+            <span class="meta-value">07</span>
+          </td>
+        </tr>
+        <tr>
+          <td class="meta-cell">
+            <span class="meta-label">HSN Code :-</span>
+            <span class="meta-value">9965</span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
 
     <!-- Table Text -->
-    <div style="font-size: 10px; margin-bottom: 4px;">Being Transportation charges for carrying your materials as per details given below :-</div>
+    <div style="font-size: 10px; margin: 6px 0 4px;">Being Transportation charges for carrying your materials as per details given below :-</div>
 
     <!-- Main Table -->
     <table class="main-table">

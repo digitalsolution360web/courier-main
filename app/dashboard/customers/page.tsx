@@ -8,6 +8,7 @@ interface Customer {
   phone: string;
   email: string;
   address: string;
+  gst: string | null;
   created_at: string;
 }
 
@@ -24,7 +25,8 @@ export default function CustomersPage() {
     full_name: '',
     phone: '',
     email: '',
-    address: ''
+    address: '',
+    gst: ''
   });
 
   const limit = 10;
@@ -57,11 +59,12 @@ export default function CustomersPage() {
         full_name: customer.full_name,
         phone: customer.phone,
         email: customer.email,
-        address: customer.address
+        address: customer.address,
+        gst: customer.gst || ''
       });
     } else {
       setEditingCustomer(null);
-      setFormData({ full_name: '', phone: '', email: '', address: '' });
+      setFormData({ full_name: '', phone: '', email: '', address: '', gst: '' });
     }
     setShowModal(true);
   };
@@ -144,6 +147,7 @@ export default function CustomersPage() {
                 <th className="px-5 py-4 border-b border-[var(--border-color)]">Phone</th>
                 <th className="px-5 py-4 border-b border-[var(--border-color)]">Email</th>
                 <th className="px-5 py-4 border-b border-[var(--border-color)]">Address</th>
+                <th className="px-5 py-4 border-b border-[var(--border-color)]">Gst No.</th>
                 <th className="px-5 py-4 border-b border-[var(--border-color)]">Date</th>
                 <th className="px-5 py-4 border-b border-[var(--border-color)] text-right">Actions</th>
               </tr>
@@ -155,6 +159,9 @@ export default function CustomersPage() {
                     <td className="px-5 py-4"><div className="h-4 w-8 skeleton" /></td>
                     <td className="px-5 py-4"><div className="h-4 w-32 skeleton" /></td>
                     <td className="px-5 py-4"><div className="h-4 w-40 skeleton" /></td>
+                    <td className="px-5 py-4"><div className="h-4 w-48 skeleton" /></td>
+                    <td className="px-5 py-4"><div className="h-4 w-48 skeleton" /></td>
+                    <td className="px-5 py-4"><div className="h-4 w-48 skeleton" /></td>
                     <td className="px-5 py-4"><div className="h-4 w-48 skeleton" /></td>
                     <td className="px-5 py-4"><div className="h-8 w-20 skeleton ml-auto" /></td>
                   </tr>
@@ -176,6 +183,7 @@ export default function CustomersPage() {
                       <div className="text-sm text-[var(--text-secondary)]">{customer.email || 'N/A'}</div>
                     </td>
                     <td className="px-5 py-4 text-sm text-[var(--text-secondary)] max-w-xs truncate">{customer.address || '—'}</td>
+                    <td className="px-5 py-4 text-sm text-[var(--text-secondary)] max-w-xs truncate">{customer.gst || 'N/A'}</td>
                     <td className="px-5 py-4">
               
                       <div className="text-xs text-[var(--text-muted)]" suppressHydrationWarning>Joined {new Date(customer.created_at).toLocaleDateString("en-IN", {
@@ -344,6 +352,16 @@ export default function CustomersPage() {
                     onChange={(e) => setFormData({ ...formData, address: e.target.value })}
                     className="w-full bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-xl py-2 md:py-3 px-4 text-[var(--text-primary)] text-sm focus:border-[var(--accent-primary)] outline-none transition-all resize-none"
                     placeholder="Street, City, Zip Code"
+                  />
+                </div>
+                <div>
+                  <label className="block text-[10px] md:text-[11px] font-bold text-[var(--text-secondary)] uppercase tracking-wider mb-1 md:mb-2">GST No.</label>
+                  <input
+                    type="text" 
+                    value={formData.gst}
+                    onChange={(e) => setFormData({ ...formData, gst: e.target.value })}
+                    className="w-full bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-xl py-2 md:py-3 px-4 text-[var(--text-primary)] text-sm focus:border-[var(--accent-primary)] outline-none transition-all placeholder:text-[var(--text-muted)]"
+                    placeholder="Enter GST number"
                   />
                 </div>
               </div>

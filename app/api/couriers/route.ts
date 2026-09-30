@@ -35,7 +35,7 @@ export async function GET(req: NextRequest) {
 
     const query = `
       SELECT c.*,
-             s.full_name AS sender_name
+             s.full_name AS sender_name, s.*
       FROM couriers c
       LEFT JOIN customers s ON c.sender_id = s.customer_id
       ${whereSql}
